@@ -26,3 +26,48 @@ while True:
         else:
             print("\nPlease enter a number between 5 and 90.")
 #end recipe
+if diet == "vegan":
+    if role == "main":
+        if form == "whole" and method == "boil" and time <=30:
+            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+        elif form == "whole" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "whole" and method == "bake" and time <= 30:
+            result = ""
+
+        elif form == "sliced" and method == "boil" and time <=30:
+            result = ""
+        elif form == "sliced" and method == "roast" and time <=30:
+            result = ""
+        elif form == "sliced" and method == "bake" and time <=30:
+            result = ""
+
+        elif form == "mashed" and method == "boil" and time <=30:
+            result = ""
+        elif form == "mashed" and method == "roast" and time <=30:
+            result = ""
+        elif form == "mashed" and method == "bake" and time <=30:
+            result = ""
+
+    if diet == "vegan":
+        if role == "sidekick":
+            if form == "whole" and method == "boil" and time <= 30:
+                result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+            elif form == "whole" and method == "roast" and time <= 30:
+                result = ""
+            elif form == "whole" and method == "bake" and time <= 30:
+                result = ""
+
+            elif form == "sliced" and method == "boil" and time <= 30:
+                result = ""
+            elif form == "sliced" and method == "roast" and time <= 30:
+                result = ""
+            elif form == "sliced" and method == "bake" and time <= 30:
+                result = ""
+
+            elif form == "mashed" and method == "boil" and time <= 30:
+                result = ""
+            elif form == "mashed" and method == "roast" and time <= 30:
+                result = ""
+            elif form == "mashed" and method == "bake" and time <= 30:
+                result = ""
