@@ -25,49 +25,90 @@ while True:
             break
         else:
             print("\nPlease enter a number between 5 and 90.")
+
 #end recipe
 if diet == "vegan":
     if role == "main":
-        if form == "whole" and method == "boil" and time <=30:
+        if form == "whole" and method == "boil" and time <=40:
+            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+        elif form == "whole" and method == "roast" and time <=50:
+            result = "Vegan Roasted Whole Potatoes with Tahini Sauce"
+        elif form == "whole" and method == "bake" and time <=40:
+            result = "Vegan Baked Potatoes Stuffed with Spiced Chickpeas"
+        elif form == "sliced" and method == "boil" and time <=30:
+            result = "Warm Vegan Potato & Spinach Salad"
+        elif form == "sliced" and method == "roast" and time <=40:
+            result = "Crispy Roasted Potato Wedges with Paprika"
+        elif form == "sliced" and method == "bake" and time <=30:
+            result = "Vegan Potato Bake with Tomatoes & Zucchini"
+        elif form == "mashed" and method == "boil" and time <=40:
+            result = "Creamy Vegan Garlic Mashed Potatoes"
+        elif form == "mashed" and method == "roast" and time <=30:
+            result = "Vegan Mashed Potato Patties"
+        elif form == "mashed" and method == "bake" and time >=50:
+            result = "Vegan Shepherd’s Pie with Mashed Potato Top"
+
+if diet == "vegan":
+    if role == "sidekick":
+        if form == "whole" and method == "boil" and time <= 30:
             result = "Vegan Mashed Potato Bowl with Lentil Gravy"
         elif form == "whole" and method == "roast" and time <= 30:
             result = ""
         elif form == "whole" and method == "bake" and time <= 30:
             result = ""
-
-        elif form == "sliced" and method == "boil" and time <=30:
+        elif form == "sliced" and method == "boil" and time <= 30:
             result = ""
-        elif form == "sliced" and method == "roast" and time <=30:
+        elif form == "sliced" and method == "roast" and time <= 30:
             result = ""
-        elif form == "sliced" and method == "bake" and time <=30:
+        elif form == "sliced" and method == "bake" and time <= 30:
             result = ""
-
-        elif form == "mashed" and method == "boil" and time <=30:
+        elif form == "mashed" and method == "boil" and time <= 30:
             result = ""
-        elif form == "mashed" and method == "roast" and time <=30:
+        elif form == "mashed" and method == "roast" and time <= 30:
             result = ""
-        elif form == "mashed" and method == "bake" and time <=30:
+        elif form == "mashed" and method == "bake" and time <= 30:
             result = ""
 
-    if diet == "vegan":
-        if role == "sidekick":
-            if form == "whole" and method == "boil" and time <= 30:
-                result = "Vegan Mashed Potato Bowl with Lentil Gravy"
-            elif form == "whole" and method == "roast" and time <= 30:
-                result = ""
-            elif form == "whole" and method == "bake" and time <= 30:
-                result = ""
+if diet == "vegetarian":
+     if role == "main":
+        if form == "whole" and method == "boil" and time <= 30:
+            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+        elif form == "whole" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "whole" and method == "bake" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "boil" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "bake" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "boil" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "bake" and time <= 30:
+            result = ""
 
-            elif form == "sliced" and method == "boil" and time <= 30:
-                result = ""
-            elif form == "sliced" and method == "roast" and time <= 30:
-                result = ""
-            elif form == "sliced" and method == "bake" and time <= 30:
-                result = ""
-
-            elif form == "mashed" and method == "boil" and time <= 30:
-                result = ""
-            elif form == "mashed" and method == "roast" and time <= 30:
-                result = ""
-            elif form == "mashed" and method == "bake" and time <= 30:
-                result = ""
+if diet == "vegetarian":
+     if role == "sidekick":
+        if form == "whole" and method == "boil" and time <= 30:
+            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+        elif form == "whole" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "whole" and method == "bake" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "boil" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "sliced" and method == "bake" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "boil" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "roast" and time <= 30:
+            result = ""
+        elif form == "mashed" and method == "bake" and time <= 30:
+            result = ""
+else:
+    result = "Oops, that's not a valid diet. Potato wizard confused. 🧙‍♂️🥔"
