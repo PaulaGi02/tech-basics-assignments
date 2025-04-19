@@ -1,30 +1,21 @@
 import time
 
+# Set default fallback result
+result = "The potato spirits are still thinking... 🍠✨"
+
 #start game "your potato destiny"
 print("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m, because potato day is every day!")
-
 time.sleep(3)
 print("So lets start with your preferenced diet")
 
 #diet preference
 diet = input("\n would you like the dish to be vegetarian or vegan?").lower()
-
 #potato role
 role = input ("\n should the potato be the main ingredient or a sidekick?").lower()
-
 #potato form
 form = input ("\n would you like your potatoes mashed, whole or sliced").lower()
-
 #cooking method
 method = input("\n would you like to roast, bake or boil the potatoes? ").lower()
-
-'''while True:
-    try:
-        time = int(input("\nHow long would you like your potatoes to cook. Give me a number from five to 90 minutes?"))
-        if time <= 5 or time <= 90:
-            break
-        else:
-            print("\nPlease enter a number between 5 and 90.")'''
 
 #end recipe
 if diet == "vegan":
@@ -48,8 +39,7 @@ if diet == "vegan":
         elif form == "mashed" and method == "bake":
             result = "Vegan Shepherd’s Pie with Mashed Potato Top"
 
-if diet == "vegan":
-    if role == "sidekick":
+    elif role == "sidekick":
         if form == "whole" and method == "boil":
             result = "Simple Boiled Potatoes with Olive Oil & Herbs"
         elif form == "whole" and method == "roast":
@@ -69,7 +59,7 @@ if diet == "vegan":
         elif form == "mashed" and method == "bake":
             result = "Baked Vegan Duchess Potatoes"
 
-if diet == "vegetarian":
+elif diet == "vegetarian":
      if role == "main":
         if form == "whole" and method == "boil":
             result = "Mashed Potatoes with Cheese & Chives"
@@ -90,8 +80,8 @@ if diet == "vegetarian":
         elif form == "mashed" and method == "bake":
             result = "Potato Casserole with Egg & Cheese"
 
-elif diet == "vegetarian":
-     if role == "sidekick":
+
+     elif role == "sidekick":
         if form == "whole" and method == "boil":
             result = "Buttered New Potatoes with Parsley"
         elif form == "whole" and method == "roast":
@@ -113,17 +103,13 @@ elif diet == "vegetarian":
 else:
     result = "Oops, that's not a valid diet. Potato wizard confused. 🧙‍♂️🥔"
 
+print(result)
 
-time.sleep(1)
-print("\n🥔 Your ideal potato dish is...")
-time.sleep(2)
-print("\n✨ {result} ✨\n")
-print("Happy cooking! 🍽️")
 
 while True:
     rating = int(input("\nrate your potato destiny on a scale from 1 👎 to 10 👍?"))
 
-    if rating <= 1 and rating <= 10:
+    if rating <= 1 or rating <= 10:
         break
 
     else:
