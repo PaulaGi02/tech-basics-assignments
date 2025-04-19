@@ -1,10 +1,16 @@
 import time
 
+def print_boxed(message):
+    border = "═" * (len(message) + 4)
+    print(f"╔{border}╗")
+    print(f"║  {message}  ║")
+    print(f"╚{border}╝")
+
 # Set default fallback result
-result = "The potato spirits are still thinking... 🍠✨"
+result = "Oops, that's not a valid diet. You have probably spelled something wrong. Potato wizard confused. 🧙‍♂️🥔"
 
 #start game "your potato destiny"
-print("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m, because potato day is every day!")
+print ("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m, because potato day is every day!",)
 time.sleep(3)
 print("So lets start with your preferenced diet")
 
@@ -103,14 +109,18 @@ elif diet == "vegetarian":
 else:
     result = "Oops, that's not a valid diet. Potato wizard confused. 🧙‍♂️🥔"
 
-print(result)
+# Reveal the potato destiny
+time.sleep(1)
+print ("\n🥔 Your ideal potato dish is...")
+time.sleep(3)
+print_boxed (result)
 
 
 while True:
     rating = int(input("\nrate your potato destiny on a scale from 1 👎 to 10 👍?"))
 
-    if rating <= 1 or rating <= 10:
-        break
+    if rating < 1 or rating > 10:
+        print("\nPlease enter a number between 1 and 10.")
 
     else:
-            print("\nPlease enter a number between 1 and 10.")
+            break
