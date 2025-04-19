@@ -1,7 +1,8 @@
 import time
 
 #start game "your potato destiny"
-print("Welcome to your potato destiny. Today we want to find the perfect patato dish for \033[1myou\033[0m,\nbecause potato day is every day!")
+print("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m, because potato day is every day!")
+
 time.sleep(3)
 print("So lets start with your preferenced diet")
 
@@ -50,72 +51,80 @@ if diet == "vegan":
 if diet == "vegan":
     if role == "sidekick":
         if form == "whole" and method == "boil":
-            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+            result = "Simple Boiled Potatoes with Olive Oil & Herbs"
         elif form == "whole" and method == "roast":
-            result = ""
+            result = "Garlic-Roasted Baby Potatoes"
         elif form == "whole" and method == "bake":
-            result = ""
+            result = "Oven-Baked Mini Potatoes with Sea Salt"
         elif form == "sliced" and method == "boil":
-            result = ""
+            result = "Sliced Potatoes with Lemon & Dill"
         elif form == "sliced" and method == "roast":
-            result = ""
+            result = "Vegan Patatas Bravas"
         elif form == "sliced" and method == "bake":
-            result = ""
+            result = "Layered Potato Gratin with Coconut Cream"
         elif form == "mashed" and method == "boil":
-            result = ""
+            result = "Fluffy Mashed Potatoes with Vegan Butter"
         elif form == "mashed" and method == "roast":
-            result = ""
+            result = "Mashed Potato Balls with Crunchy Crust"
         elif form == "mashed" and method == "bake":
-            result = ""
+            result = "Baked Vegan Duchess Potatoes"
 
 if diet == "vegetarian":
      if role == "main":
         if form == "whole" and method == "boil":
-            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+            result = "Mashed Potatoes with Cheese & Chives"
         elif form == "whole" and method == "roast":
-            result = ""
+            result = "Crispy Herb Roasted Potatoes with Feta"
         elif form == "whole" and method == "bake":
-            result = ""
+            result = "Baked Potatoes Stuffed with Broccoli & Cheese"
         elif form == "sliced" and method == "boil":
-            result = ""
+            result = "Sliced Potatoes in Creamy Spinach Sauce"
         elif form == "sliced" and method == "roast":
-            result = ""
+            result = "Parmesan Roasted Potato Slices"
         elif form == "sliced" and method == "bake":
-            result = ""
+            result = "Cheesy Potato & Tomato Bake"
         elif form == "mashed" and method == "boil":
-            result = ""
+            result = "Cheddar Mashed Potatoes"
         elif form == "mashed" and method == "roast":
-            result = ""
+            result = "Mashed Potato Cakes with Sour Cream"
         elif form == "mashed" and method == "bake":
-            result = ""
+            result = "Potato Casserole with Egg & Cheese"
 
-if diet == "vegetarian":
+elif diet == "vegetarian":
      if role == "sidekick":
         if form == "whole" and method == "boil":
-            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
+            result = "Buttered New Potatoes with Parsley"
         elif form == "whole" and method == "roast":
-            result = ""
+            result = "Garlic and Herb Roasted Potatoes"
         elif form == "whole" and method == "bake":
-            result = ""
+            result = "Baked Mini Potatoes with Cream Cheese"
         elif form == "sliced" and method == "boil":
-            result = ""
+            result = "Sliced Potatoes with Sour Cream Dressing"
         elif form == "sliced" and method == "roast":
-            result = ""
+            result = "Cheesy Potato Slices with Thyme"
         elif form == "sliced" and method == "bake":
-            result = ""
+            result = "Layered Potato Bake with Gruyère"
         elif form == "mashed" and method == "boil":
-            result = ""
+            result = "Creamy Mashed Potatoes with Nutmeg"
         elif form == "mashed" and method == "roast":
-            result = ""
+            result = "Mashed Potato Puffs"
         elif form == "mashed" and method == "bake":
-            result = ""
+            result = "Baked Mashed Potato Swirls with Cheese"
 else:
     result = "Oops, that's not a valid diet. Potato wizard confused. 🧙‍♂️🥔"
 
+
+time.sleep(1)
+print("\n🥔 Your ideal potato dish is...")
+time.sleep(2)
+print("\n✨ {result} ✨\n")
+print("Happy cooking! 🍽️")
+
 while True:
-    try:
-        rating = int(input("\nrate your potato destiny on a scale from 1 to 10?"))
-        if rating <= 1 or time <= 10:
-            break
-        else:
+    rating = int(input("\nrate your potato destiny on a scale from 1 👎 to 10 👍?"))
+
+    if rating <= 1 and rating <= 10:
+        break
+
+    else:
             print("\nPlease enter a number between 1 and 10.")
