@@ -1,4 +1,10 @@
-import time
+import time, sys
+
+def typewriter(text):
+  for character in text:
+    sys.stdout.write(character)
+    sys.stdout.flush()
+    time.sleep(0.02)
 
 def print_boxed(message):
     border = "═" * (len(message) + 4)
@@ -12,16 +18,46 @@ result = "Oops, that's not a valid diet. You have probably spelled something wro
 #start game "your potato destiny"
 print ("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!",)
 time.sleep(3)
-print("So lets start with your preferenced diet")
+print("So let's start with your preferred diet")
 
-#diet preference
-diet = input("\n would you like the dish to be vegetarian or vegan?🍃 ").lower()
-#potato role
-role = input ("\n should the potato be the main ingredient or a sidekick?🍽️ ").lower()
-#potato form
-form = input ("\n would you like your potatoes mashed, whole or sliced?🍠 ").lower()
-#cooking method
-method = input("\n would you like to roast, bake or boil the potatoes?🔥 ").lower()
+
+while True:
+    diet = str(input("\nwould you like the dish to be vegetarian or vegan?🍃").lower())
+
+    if diet == "vegetarian" or diet == "vegan":
+        break
+
+    else:
+        print ("Please enter a valid diet type.")
+
+while True:
+    role = str(input("\nshould the potato be the main ingredient or a sidekick?🍽️").lower())
+
+    if role == "main" or role == "sidekick":
+        break
+
+    else:
+        print ("Please enter a valid option.")
+
+while True:
+    form = str(input("\nwould you like your potatoes mashed, whole or sliced?🍠").lower())
+
+    if form == "mashed" or form == "whole" or form == "sliced":
+        break
+
+    else:
+        print ("Please enter a valid option.")
+
+
+while True:
+    method = str(input("\nwould you like to roast, bake or boil the potatoes?🔥").lower())
+
+    if method == "roast" or method == "bake" or method == "boil":
+        break
+
+    else:
+        print ("Please enter a valid option.")
+
 
 #end recipe
 if diet == "vegan":
@@ -111,8 +147,9 @@ else:
 
 # Reveal the potato destiny
 time.sleep(1)
-print ("\n🥔 Your ideal potato dish is...")
+typewriter ("\n🥔 Your ideal potato dish is..." )
 time.sleep(3)
+
 print_boxed (result)
 
 
