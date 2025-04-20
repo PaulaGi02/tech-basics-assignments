@@ -16,9 +16,9 @@ def print_boxed(message):
 result = "Oops, that's not a valid diet. You have probably spelled something wrong. Potato wizard confused. 🧙‍♂️🥔"
 
 #start game "your potato destiny"
-print ("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!",)
+typewriter ("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!",)
 time.sleep(3)
-print("So let's start with your preferred diet")
+typewriter ("\nSo let's start with your preferred diet\n")
 
 
 while True:
