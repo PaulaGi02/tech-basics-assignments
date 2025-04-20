@@ -22,7 +22,7 @@ print("So let's start with your preferred diet")
 
 
 while True:
-    diet = str(input("\nwould you like the dish to be vegetarian or vegan?🍃").lower())
+    diet = str(input("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃").lower())
 
     if diet == "vegetarian" or diet == "vegan":
         break
@@ -31,7 +31,7 @@ while True:
         print ("Please enter a valid diet type.")
 
 while True:
-    role = str(input("\nshould the potato be the main ingredient or a sidekick?🍽️").lower())
+    role = str(input("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️").lower())
 
     if role == "main" or role == "sidekick":
         break
@@ -40,7 +40,7 @@ while True:
         print ("Please enter a valid option.")
 
 while True:
-    form = str(input("\nwould you like your potatoes mashed, whole or sliced?🍠").lower())
+    form = str(input("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠").lower())
 
     if form == "mashed" or form == "whole" or form == "sliced":
         break
@@ -50,7 +50,7 @@ while True:
 
 
 while True:
-    method = str(input("\nwould you like to roast, bake or boil the potatoes?🔥").lower())
+    method = str(input("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥").lower())
 
     if method == "roast" or method == "bake" or method == "boil":
         break
@@ -147,7 +147,7 @@ else:
 
 # Reveal the potato destiny
 time.sleep(1)
-typewriter ("\n🥔 Your ideal potato dish is..." )
+typewriter ("\n🥔 Your ideal potato dish is... \n" )
 time.sleep(3)
 
 print_boxed (result)
