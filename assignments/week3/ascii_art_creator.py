@@ -1,14 +1,14 @@
 import random
 
-
+pattern = "_._.v_-_.__-_ ,___v"
 #choose a width for the length of the meadow
-width = int(input("Enter the width of the meadow 5-10 "))
+meadow_width = int(input("Enter the width of the meadow 5-10 "))
 #choose hoe many flowers you want
 count = int(input("How many flowers do you want on your meadow? 1-4"))
 #chose a season spring, summer, winter, autumn
-season = int(input("Do you prefer mushrooms, cactuses, or flowers? "))
+season = input("Do you prefer mushrooms, cactuses, or flowers? ")
 
-meadow = ["_._.v_-_.__-_ ,___v"]
+meadow_row = pattern * meadow_width
 flowers  = [r"""   
           
                          @@@@
@@ -116,3 +116,9 @@ mushrooms = [r""" .-'''-.
                                                                                                               |  |
                                                                                                              /   |
                                                                                                                """]
+
+for x in range (1):
+    print (meadow_row)
+
+
+
