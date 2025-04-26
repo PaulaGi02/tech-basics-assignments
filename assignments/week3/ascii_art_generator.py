@@ -1,7 +1,28 @@
 import random
+import time
 
-user_input = int(input("Enter a number between 1 and 5: "))
-mood = input("please enter a mood: choose between shocked, happy or dance")
+
+while True:
+    user_input = int(input("How many Emojis in a row do you want? Enter a number between 1 and 5: ").lower())
+    if user_input <1 or user_input >5:
+        print("Invalid input. Try again.")
+    else:
+        break
+
+while True:
+    mood = input("please enter a mood: choose between shocked, happy or dance").lower()
+    if mood == "shocked" or "happy" or "dance":
+        break
+    else:
+        print("Invalid input. Try again.")
+
+while True:
+    lines = int(input("How many lines do you want? Choose a number between 3 and 10 ").lower())
+    if lines < 3 or lines > 10:
+        print("Invalid input. Try again.")
+    else:
+        break
+
 
 shocked = [r"＜('0')＞¯", r"૮(°□°'˶)ა", r"( ˶°ㅁ°)", r"(⚆ᗝ⚆)", r"(⊙_⊙)"]
 happy = [r"(๑ˇεˇ๑)", r"(◕‿◕✿)", r"/(≧∇≦)/", r"(●＾o＾●)", r"(＾▽＾)", r"( ˶ˆᗜˆ˵ )"]
@@ -12,17 +33,17 @@ random_happy = random.sample(happy, user_input)
 random_dance = random.sample(dance, user_input)
 
 if mood == "shocked":
-    for _ in range(5):
+    for _ in range(lines):
         for emoji in random_shocked:
             print(emoji, end=' ')
         print()
 elif mood == "happy":
-    for _ in range(5):
+    for _ in range(lines):
         for emoji in random_happy:
             print(emoji, end=' ')
         print()
 elif mood == "dance":
-    for _ in range(5):
+    for _ in range(lines):
         for emoji in random_dance:
             print(emoji, end=' ')
         print()
