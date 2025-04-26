@@ -11,7 +11,7 @@ while True:
 
 while True:
     mood = input("please enter a mood: choose between shocked, happy or dance").lower()
-    if mood == "shocked" or "happy" or "dance":
+    if mood == "shocked" or mood == "happy" or mood == "dance":
         break
     else:
         print("Invalid input. Try again.")
@@ -34,18 +34,24 @@ random_dance = random.sample(dance, user_input)
 
 if mood == "shocked":
     for _ in range(lines):
-        for emoji in random_shocked:
+        random_emojis = random.sample(shocked, user_input)
+        for emoji in random_emojis:
             print(emoji, end=' ')
+            time.sleep(0.1)
         print()
 elif mood == "happy":
     for _ in range(lines):
-        for emoji in random_happy:
+        random_emojis = random.sample(happy, user_input)
+        for emoji in random_emojis:
             print(emoji, end=' ')
+            time.sleep(0.1)
         print()
 elif mood == "dance":
     for _ in range(lines):
-        for emoji in random_dance:
+        random_emojis = random.sample(dance, user_input)
+        for emoji in random_emojis:
             print(emoji, end=' ')
+            time.sleep(0.1)
         print()
 else:
     print("Sorry, you typed in something wrong")
