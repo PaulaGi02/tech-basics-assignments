@@ -1,6 +1,6 @@
 import random
 import time
-
+import sys
 
 while True:
     user_input = int(input("How many Emojis in a row do you want? Enter a number between 1 and 5: ").lower())
@@ -23,6 +23,28 @@ while True:
     else:
         break
 
+frames = [
+    "[      ]",
+    "[=     ]",
+    "[==    ]",
+    "[===   ]",
+    "[ ===  ]",
+    "[  === ]",
+    "[   ===]",
+    "[    ==]"
+]
+
+duration = 5  # seconds
+start_time = time.time()
+
+while time.time() - start_time < duration:
+    for frame in frames:
+        sys.stdout.write('\rLoading ' + frame)
+        sys.stdout.flush()
+        time.sleep(0.2)
+        if time.time() - start_time >= duration:
+            break
+print("\nLoading complete!\n")
 
 shocked = [r"＜('0')＞¯", r"૮(°□°'˶)ა", r"( ˶°ㅁ°)", r"(⚆ᗝ⚆)", r"(⊙_⊙)"]
 happy = [r"(๑ˇεˇ๑)", r"(◕‿◕✿)", r"/(≧∇≦)/", r"(●＾o＾●)", r"(＾▽＾)", r"( ˶ˆᗜˆ˵ )"]
@@ -55,3 +77,5 @@ elif mood == "dance":
         print()
 else:
     print("Sorry, you typed in something wrong")
+
+
