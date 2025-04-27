@@ -57,13 +57,15 @@ random_dance = random.sample(dance, user_input)
 if mood == "shocked":
     for _ in range(lines):
         random_emojis = random.sample(shocked, user_input)
+        print(' ' * 10, end='')
         for emoji in random_emojis:
             print(emoji, end=' ')
-            time.sleep(0.1)
+            sleep_time = 0.15
         print()
 elif mood == "happy":
     for _ in range(lines):
         random_emojis = random.sample(happy, user_input)
+        print(' ' * 10, end='')
         for emoji in random_emojis:
             print(emoji, end=' ')
             time.sleep(0.1)
@@ -71,9 +73,10 @@ elif mood == "happy":
 elif mood == "dance":
     for _ in range(lines):
         random_emojis = random.sample(dance, user_input)
+        print(' ' * 10, end='')
         for emoji in random_emojis:
             print(emoji, end=' ')
-            time.sleep(0.1)
+            sleep_time = 0.05
         print()
 else:
     print("Sorry, you typed in something wrong")
