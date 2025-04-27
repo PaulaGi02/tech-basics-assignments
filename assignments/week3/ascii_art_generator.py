@@ -10,14 +10,14 @@ while True:
         break
 
 while True:
-    mood = input("please enter a mood: choose between shocked, happy or dance").lower()
+    mood = input("please enter a mood: choose between \033[1mshocked\033[0m, \033[1mhappy\033[0m or \033[1mdance\033[0m: ").lower()
     if mood == "shocked" or mood == "happy" or mood == "dance":
         break
     else:
         print("Invalid input. Try again.")
 
 while True:
-    lines = int(input("How many lines do you want? Choose a number between 3 and 10 ").lower())
+    lines = int(input("How many lines do you want? Choose a number between 3 and 10: ").lower())
     if lines < 3 or lines > 10:
         print("Invalid input. Try again.")
     else:
