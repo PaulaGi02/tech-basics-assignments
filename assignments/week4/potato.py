@@ -116,34 +116,33 @@ def determine_potato_destiny(diet, role, form, method):
 #Game logic
 #first the mane logic, that runs the game
 def main():
-    typewriter(
-        "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
+    typewriter("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
     time.sleep(3)
     typewriter("\nSo let's start with your preferred diet\n")
 
+    #user input
+    diet = user_choice("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃", DIET)
+    role = user_choice("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️", ROLE)
+    form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠", FORM)
+    method = user_choice("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥", METHOD)
 
-diet = user_choice("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃", DIET)
-role = user_choice("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️", ROLE)
-form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠", FORM)
-method = user_choice("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥", METHOD)
+    # Reveal the potato destiny
+    typewriter("\n🥔 Your ideal potato dish is...\n")
+    time.sleep(2)
+    final_dish = determine_potato_destiny(diet, role, form, method)
+    print_boxed(final_dish)
 
-# Reveal the potato destiny
-typewriter("\n🥔 Your ideal potato dish is...\n")
-time.sleep(2)
-final_dish = determine_potato_destiny(diet, role, form, method)
-print_boxed(final_dish)
+    while True:
+        try:
+            rating = int(input("\nRate your potato destiny on a scale from 1 👎 to 10 👍: "))
+            if 1 <= rating <= 10:
+                print("Thanks for your feedback! 🥔✨")
+                break
+            else:
+                print("Please enter a number between 1 and 10.")
+        except ValueError:
+            print("Please enter a valid number.")
 
-while True:
-    try:
-        rating = int(input("\nRate your potato destiny on a scale from 1 👎 to 10 👍: "))
-        if 1 <= rating <= 10:
-            print("Thanks for your feedback! 🥔✨")
-            break
-        else:
-            print("Please enter a number between 1 and 10.")
-    except ValueError:
-        print("Please enter a valid number.")
-
-# ==== RUN ====
+# run
 if __name__ == "__main__":
     main()
