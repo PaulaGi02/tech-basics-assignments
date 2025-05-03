@@ -1,26 +1,35 @@
 #This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
-
 import time, sys
 
 #constants
 typewriter_speed = 0.02
-diets = ["vegetarian", "vegan"]
+diet = ["vegetarian", "vegan"]
 role= ["main", "sidekick"]
 form = ["mashed", "whole", "sliced"]
 method = ["boil", "roast", "bake"]
 
-
+#Simulates a typewriter effect for printed text
 def typewriter(text):
   for character in text:
     sys.stdout.write(character)
     sys.stdout.flush()
     time.sleep(0.02)
 
+#Prints a message in a stylized box
 def print_boxed(message):
     border = "═" * (len(message) + 4)
     print(f"╔{border}╗")
     print(f"║  {message}  ║")
     print(f"╚{border}╝")
+
+#checks if input is valid
+def get_user_choice(prompt, options):
+    while True:
+        choice = input(prompt).lower()
+        if choice in options:
+            return choice
+        print("Please enter a valid option.")
+
 
 # Set default fallback result
 result = "Oops, that's not a valid diet. You have probably spelled something wrong. Potato wizard confused. 🧙‍♂️🥔"
@@ -68,92 +77,87 @@ while True:
     else:
         print ("Please enter a valid option.")
 
+#Returns the potato dish based on user preferences
+def determine_potato_destiny(diet, role, form, method):
+    # Define dish combinations
+    dishes = {
+        "vegan": {
+            "main": {
+                "whole": {
+                    "boil": "Vegan Mashed Potato Bowl with Lentil Gravy",
+                    "roast": "Vegan Roasted Whole Potatoes with Tahini Sauce",
+                    "bake": "Vegan Baked Potatoes Stuffed with Spiced Chickpeas",
+                },
+                "sliced": {
+                    "boil": "Warm Vegan Potato & Spinach Salad",
+                    "roast": "Crispy Roasted Potato Wedges with Paprika",
+                    "bake": "Vegan Potato Bake with Tomatoes & Zucchini",
+                },
+                "mashed": {
+                    "boil": "Creamy Vegan Garlic Mashed Potatoes",
+                    "roast": "Vegan Mashed Potato Patties",
+                    "bake": "Vegan Shepherd’s Pie with Mashed Potato Top",
+                },
+            },
+            "sidekick": {
+                "whole": {
+                    "boil": "Simple Boiled Potatoes with Olive Oil & Herbs",
+                    "roast": "Garlic-Roasted Baby Potatoes",
+                    "bake": "Oven-Baked Mini Potatoes with Sea Salt",
+                },
+                "sliced": {
+                    "boil": "Sliced Potatoes with Lemon & Dill",
+                    "roast": "Vegan Patatas Bravas",
+                    "bake": "Layered Potato Gratin with Coconut Cream",
+                },
+                "mashed": {
+                    "boil": "Fluffy Mashed Potatoes with Vegan Butter",
+                    "roast": "Mashed Potato Balls with Crunchy Crust",
+                    "bake": "Baked Vegan Duchess Potatoes",
+                },
+            },
+        },
+        "vegetarian": {
+            "main": {
+                "whole": {
+                    "boil": "Mashed Potatoes with Cheese & Chives",
+                    "roast": "Crispy Herb Roasted Potatoes with Feta",
+                    "bake": "Baked Potatoes Stuffed with Broccoli & Cheese",
+                },
+                "sliced": {
+                    "boil": "Sliced Potatoes in Creamy Spinach Sauce",
+                    "roast": "Parmesan Roasted Potato Slices",
+                    "bake": "Cheesy Potato & Tomato Bake",
+                },
+                "mashed": {
+                    "boil": "Cheddar Mashed Potatoes",
+                    "roast": "Mashed Potato Cakes with Sour Cream",
+                    "bake": "Potato Casserole with Egg & Cheese",
+                },
+            },
+            "sidekick": {
+                "whole": {
+                    "boil": "Buttered New Potatoes with Parsley",
+                    "roast": "Garlic and Herb Roasted Potatoes",
+                    "bake": "Baked Mini Potatoes with Cream Cheese",
+                },
+                "sliced": {
+                    "boil": "Sliced Potatoes with Sour Cream Dressing",
+                    "roast": "Cheesy Potato Slices with Thyme",
+                    "bake": "Layered Potato Bake with Gruyère",
+                },
+                "mashed": {
+                    "boil": "Creamy Mashed Potatoes with Nutmeg",
+                    "roast": "Mashed Potato Puffs",
+                    "bake": "Baked Mashed Potato Swirls with Cheese",
+                },
+            },
+        }
+    }
 
-#end recipe
-if diet == "vegan":
-    if role == "main":
-        if form == "whole" and method == "boil":
-            result = "Vegan Mashed Potato Bowl with Lentil Gravy"
-        elif form == "whole" and method == "roast":
-            result = "Vegan Roasted Whole Potatoes with Tahini Sauce"
-        elif form == "whole" and method == "bake":
-            result = "Vegan Baked Potatoes Stuffed with Spiced Chickpeas"
-        elif form == "sliced" and method == "boil":
-            result = "Warm Vegan Potato & Spinach Salad"
-        elif form == "sliced" and method == "roast":
-            result = "Crispy Roasted Potato Wedges with Paprika"
-        elif form == "sliced" and method == "bake":
-            result = "Vegan Potato Bake with Tomatoes & Zucchini"
-        elif form == "mashed" and method == "boil":
-            result = "Creamy Vegan Garlic Mashed Potatoes"
-        elif form == "mashed" and method == "roast":
-            result = "Vegan Mashed Potato Patties"
-        elif form == "mashed" and method == "bake":
-            result = "Vegan Shepherd’s Pie with Mashed Potato Top"
+    return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method,
+        "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
-    elif role == "sidekick":
-        if form == "whole" and method == "boil":
-            result = "Simple Boiled Potatoes with Olive Oil & Herbs"
-        elif form == "whole" and method == "roast":
-            result = "Garlic-Roasted Baby Potatoes"
-        elif form == "whole" and method == "bake":
-            result = "Oven-Baked Mini Potatoes with Sea Salt"
-        elif form == "sliced" and method == "boil":
-            result = "Sliced Potatoes with Lemon & Dill"
-        elif form == "sliced" and method == "roast":
-            result = "Vegan Patatas Bravas"
-        elif form == "sliced" and method == "bake":
-            result = "Layered Potato Gratin with Coconut Cream"
-        elif form == "mashed" and method == "boil":
-            result = "Fluffy Mashed Potatoes with Vegan Butter"
-        elif form == "mashed" and method == "roast":
-            result = "Mashed Potato Balls with Crunchy Crust"
-        elif form == "mashed" and method == "bake":
-            result = "Baked Vegan Duchess Potatoes"
-
-elif diet == "vegetarian":
-     if role == "main":
-        if form == "whole" and method == "boil":
-            result = "Mashed Potatoes with Cheese & Chives"
-        elif form == "whole" and method == "roast":
-            result = "Crispy Herb Roasted Potatoes with Feta"
-        elif form == "whole" and method == "bake":
-            result = "Baked Potatoes Stuffed with Broccoli & Cheese"
-        elif form == "sliced" and method == "boil":
-            result = "Sliced Potatoes in Creamy Spinach Sauce"
-        elif form == "sliced" and method == "roast":
-            result = "Parmesan Roasted Potato Slices"
-        elif form == "sliced" and method == "bake":
-            result = "Cheesy Potato & Tomato Bake"
-        elif form == "mashed" and method == "boil":
-            result = "Cheddar Mashed Potatoes"
-        elif form == "mashed" and method == "roast":
-            result = "Mashed Potato Cakes with Sour Cream"
-        elif form == "mashed" and method == "bake":
-            result = "Potato Casserole with Egg & Cheese"
-
-
-     elif role == "sidekick":
-        if form == "whole" and method == "boil":
-            result = "Buttered New Potatoes with Parsley"
-        elif form == "whole" and method == "roast":
-            result = "Garlic and Herb Roasted Potatoes"
-        elif form == "whole" and method == "bake":
-            result = "Baked Mini Potatoes with Cream Cheese"
-        elif form == "sliced" and method == "boil":
-            result = "Sliced Potatoes with Sour Cream Dressing"
-        elif form == "sliced" and method == "roast":
-            result = "Cheesy Potato Slices with Thyme"
-        elif form == "sliced" and method == "bake":
-            result = "Layered Potato Bake with Gruyère"
-        elif form == "mashed" and method == "boil":
-            result = "Creamy Mashed Potatoes with Nutmeg"
-        elif form == "mashed" and method == "roast":
-            result = "Mashed Potato Puffs"
-        elif form == "mashed" and method == "bake":
-            result = "Baked Mashed Potato Swirls with Cheese"
-else:
-    result = "Oops, that's not a valid diet. Potato wizard confused. 🧙‍♂️🥔"
 
 # Reveal the potato destiny
 time.sleep(1)
