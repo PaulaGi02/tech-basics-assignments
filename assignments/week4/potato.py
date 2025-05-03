@@ -3,10 +3,10 @@ import time, sys
 
 #constants
 typewriter_speed = 0.02
-diet = ["vegetarian", "vegan"]
-role= ["main", "sidekick"]
-form = ["mashed", "whole", "sliced"]
-method = ["boil", "roast", "bake"]
+DIET = ["vegetarian", "vegan"]
+ROLE= ["main", "sidekick"]
+FORM = ["mashed", "whole", "sliced"]
+METHOD = ["boil", "roast", "bake"]
 
 #Simulates a typewriter effect for printed text
 def typewriter(text):
@@ -23,7 +23,7 @@ def print_boxed(message):
     print(f"╚{border}╝")
 
 #checks if input is valid
-def get_user_choice(prompt, options):
+def user_choice(prompt, options):
     while True:
         choice = input(prompt).lower()
         if choice in options:
@@ -33,11 +33,6 @@ def get_user_choice(prompt, options):
 
 # Set default fallback result
 result = "Oops, that's not a valid diet. You have probably spelled something wrong. Potato wizard confused. 🧙‍♂️🥔"
-
-#start game "your potato destiny"
-typewriter ("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!",)
-time.sleep(3)
-typewriter ("\nSo let's start with your preferred diet\n")
 
 
 while True:
@@ -158,6 +153,19 @@ def determine_potato_destiny(diet, role, form, method):
     return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method,
         "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
+#Game logic
+#first the mane logic, that runs the game
+def main():
+    typewriter(
+        "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
+    time.sleep(3)
+    typewriter("\nSo let's start with your preferred diet\n")
+
+
+diet = user_choice("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃", DIET)
+role = user_choice("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️", ROLE)
+form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠", FORM)
+method = user_choice("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥", METHOD)
 
 # Reveal the potato destiny
 time.sleep(1)
