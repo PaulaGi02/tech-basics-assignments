@@ -1,5 +1,6 @@
 #This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
-import time, sys
+import time
+import sys
 
 #constants
 typewriter_speed = 0.02
@@ -30,47 +31,6 @@ def user_choice(prompt, options):
             return choice
         print("Please enter a valid option.")
 
-
-# Set default fallback result
-result = "Oops, that's not a valid diet. You have probably spelled something wrong. Potato wizard confused. 🧙‍♂️🥔"
-
-
-while True:
-    diet = str(input("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃").lower())
-
-    if diet == "vegetarian" or diet == "vegan":
-        break
-
-    else:
-        print ("Please enter a valid diet type.")
-
-while True:
-    role = str(input("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️").lower())
-
-    if role == "main" or role == "sidekick":
-        break
-
-    else:
-        print ("Please enter a valid option.")
-
-while True:
-    form = str(input("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠").lower())
-
-    if form == "mashed" or form == "whole" or form == "sliced":
-        break
-
-    else:
-        print ("Please enter a valid option.")
-
-
-while True:
-    method = str(input("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥").lower())
-
-    if method == "roast" or method == "bake" or method == "boil":
-        break
-
-    else:
-        print ("Please enter a valid option.")
 
 #Returns the potato dish based on user preferences
 def determine_potato_destiny(diet, role, form, method):
@@ -168,18 +128,22 @@ form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1m
 method = user_choice("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥", METHOD)
 
 # Reveal the potato destiny
-time.sleep(1)
-typewriter ("\n🥔 Your ideal potato dish is... \n" )
-time.sleep(3)
-
-print_boxed (result)
-
+typewriter("\n🥔 Your ideal potato dish is...\n")
+time.sleep(2)
+final_dish = determine_potato_destiny(diet, role, form, method)
+print_boxed(final_dish)
 
 while True:
-    rating = int(input("\nrate your potato destiny on a scale from 1 👎 to 10 👍?"))
-
-    if rating < 1 or rating > 10:
-        print("\nPlease enter a number between 1 and 10.")
-
-    else:
+    try:
+        rating = int(input("\nRate your potato destiny on a scale from 1 👎 to 10 👍: "))
+        if 1 <= rating <= 10:
+            print("Thanks for your feedback! 🥔✨")
             break
+        else:
+            print("Please enter a number between 1 and 10.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+# ==== RUN ====
+if __name__ == "__main__":
+    main()
