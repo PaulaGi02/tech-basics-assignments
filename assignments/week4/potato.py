@@ -1,4 +1,13 @@
+#This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
+
 import time, sys
+
+#constants
+typewriter_speed = 0.02
+diets = ["vegetarian", "vegan"]
+role= ["main", "sidekick"]
+form = ["mashed", "whole", "sliced"]
+method = ["boil", "roast", "bake"]
 
 
 def typewriter(text):
