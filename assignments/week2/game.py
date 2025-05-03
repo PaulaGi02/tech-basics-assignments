@@ -1,12 +1,22 @@
+#This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
+
 import time, sys
 
-def typewriter(text):
+#constants
+typewriter_speed = 0.02
+diets = ["vegetarian", "vegan"]
+role= ["main", "sidekick"]
+form = ["mashed", "whole", "sliced"]
+method = ["boil", "roast", "bake"]
+
+#design functions
+def typewriter(text): #simulates a typewriter effect
   for character in text:
     sys.stdout.write(character)
     sys.stdout.flush()
     time.sleep(0.02)
 
-def print_boxed(message):
+def print_boxed(message): #prints message in a box to highlight it
     border = "═" * (len(message) + 4)
     print(f"╔{border}╗")
     print(f"║  {message}  ║")

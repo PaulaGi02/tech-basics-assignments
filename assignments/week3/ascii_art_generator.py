@@ -4,13 +4,14 @@ import sys
 
 while True:
     user_input = int(input("How many Emojis in a row do you want? Enter a number between 1 and 5: ").lower())
-    if user_input <1 or user_input >5:
+    if user_input < 1 or user_input > 5:
         print("Invalid input. Try again.")
     else:
         break
 
 while True:
-    mood = input("please enter a mood: choose between \033[1mshocked\033[0m, \033[1mhappy\033[0m or \033[1mdance\033[0m: ").lower()
+    mood = input(
+        "please enter a mood: choose between \033[1mshocked\033[0m, \033[1mhappy\033[0m or \033[1mdance\033[0m: ").lower()
     if mood == "shocked" or mood == "happy" or mood == "dance":
         break
     else:
@@ -80,5 +81,3 @@ elif mood == "dance":
         print()
 else:
     print("Sorry, you typed in something wrong")
-
-
