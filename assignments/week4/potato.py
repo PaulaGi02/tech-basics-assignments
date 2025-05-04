@@ -127,21 +127,24 @@ def determine_potato_destiny(diet, role, form, method):
     return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method, "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
 
-# Game logic
-# first the mane logic, that runs the game
+#Game logic
+#Collects user choices for diet, role, form, and method
+def get_user_preferences():
+    diet = user_choice("\nWould you like the dish to be vegetarian or vegan?🍃 ", DIET)
+    role = user_choice("\nShould the potato be the main ingredient or a sidekick?🍽️ ", ROLE)
+    form = user_choice("\nWould you like your potatoes mashed, whole or sliced?🍠 ", FORM)
+    method = user_choice("\nWould you like to roast, bake or boil the potatoes?🔥 ", METHOD)
+    return diet, role, form, method
+
+#game process
 def main():
     typewriter(
-        "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
-    time.sleep(3)
-    typewriter("\nSo let's start with your preferred diet\n")
+        "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day! 🥔")
+    time.sleep(2)
+    typewriter("\nSo let's start with your preferred diet.\n")
 
-    # user input
-    diet = user_choice("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃", DIET)
-    role = user_choice("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️", ROLE)
-    form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠", FORM)
-    method = user_choice("\nwould you like to \033[1mroast\033[0m, \033[1mbake\033[0m or \033[1mboil\033[0m the potatoes?🔥", METHOD)
+    diet, role, form, method = get_user_preferences()
 
-    # Reveal the potato destiny
     typewriter("\n🥔 Your ideal potato dish is...\n")
     time.sleep(2)
     final_dish = determine_potato_destiny(diet, role, form, method)
