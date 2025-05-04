@@ -1,27 +1,30 @@
-#This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
+# This little game is ann interactive program that helps users discover their ideal potato dish based on preferences
 import time
 import sys
 
-#constants
+# constants
 typewriter_speed = 0.02
 DIET = ["vegetarian", "vegan"]
-ROLE= ["main", "sidekick"]
+ROLE = ["main", "sidekick"]
 FORM = ["mashed", "whole", "sliced"]
 METHOD = ["boil", "roast", "bake"]
 
-#Simulates a typewriter effect for printed text
-def typewriter(text):
-  for character in text:
-    sys.stdout.write(character)
-    sys.stdout.flush()
-    time.sleep(0.02)
 
-#Prints a message in a stylized box
+# Simulates a typewriter effect for printed text
+def typewriter(text):
+    for character in text:
+        sys.stdout.write(character)
+        sys.stdout.flush()
+        time.sleep(0.02)
+
+
+# Prints a message in a stylized box
 def print_boxed(message):
     border = "═" * (len(message) + 4)
     print(f"╔{border}╗")
     print(f"║  {message}  ║")
     print(f"╚{border}╝")
+
 
 #checks if input is valid
 def user_choice(prompt, options):
@@ -31,10 +34,21 @@ def user_choice(prompt, options):
             return choice
         print("Please enter a valid option.")
 
+#defining rating logic
+def get_rating():
+    while True:
+        try:
+            rating = int(input("\nRate your potato destiny on a scale from 1 👎 to 10 👍: "))
+            if 1 <= rating <= 10:
+                return rating
+            print("Please enter a number between 1 and 10.")
+        except ValueError:
+            print("Please enter a valid number.")
 
-#Returns the potato dish based on user preferences
+
+# Returns the potato dish based on user preferences
 def determine_potato_destiny(diet, role, form, method):
-    # Define dish combinations
+    #nested dictionary with all options and results
     dishes = {
         "vegan": {
             "main": {
@@ -109,18 +123,19 @@ def determine_potato_destiny(diet, role, form, method):
             },
         }
     }
+    #this line gets final recipe from nested dictionary
+    return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method, "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
-    return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method,
-        "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
-#Game logic
-#first the mane logic, that runs the game
+# Game logic
+# first the mane logic, that runs the game
 def main():
-    typewriter("Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
+    typewriter(
+        "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day🥔!", )
     time.sleep(3)
     typewriter("\nSo let's start with your preferred diet\n")
 
-    #user input
+    # user input
     diet = user_choice("\nwould you like the dish to be \033[1mvegetarian\033[0m or \033[1mvegan\033[0m?🍃", DIET)
     role = user_choice("\nshould the potato be the \033[1mmain\033[0m ingredient or a \033[1msidekick\033[0m?🍽️", ROLE)
     form = user_choice("\nwould you like your potatoes \033[1mmashed\033[0m, \033[1mwhole\033[0m or \033[1msliced\033[0m?🍠", FORM)
@@ -132,17 +147,8 @@ def main():
     final_dish = determine_potato_destiny(diet, role, form, method)
     print_boxed(final_dish)
 
-    while True:
-        try:
-            rating = int(input("\nRate your potato destiny on a scale from 1 👎 to 10 👍: "))
-            if 1 <= rating <= 10:
-                print("Thanks for your feedback! 🥔✨")
-                break
-            else:
-                print("Please enter a number between 1 and 10.")
-        except ValueError:
-            print("Please enter a valid number.")
+    rating = get_rating()
+    print("Thanks for your feedback! 🥔✨")
 
 # run
-if __name__ == "__main__":
-    main()
+main()
