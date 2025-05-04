@@ -153,5 +153,8 @@ def main():
     rating = get_rating()
     print("Thanks for your feedback! 🥔✨")
 
+
 # run
-main()
+if __name__ == "__main__":
+    main()
+
