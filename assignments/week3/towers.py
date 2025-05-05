@@ -92,6 +92,31 @@ def main():
     print("\nYour skyline is ready! 🌆\n")
 
 # Generate buildings with random height and chosen symbol
+    buildings = []
+    for _ in range(number_of_buildings):
+        height = random.randint(5, 20)
+        symbol = random.choice(building_symbols)
+        width = 7
+        building = generate_building(height, width, symbol)
+        buildings.append((building, width))
+
+    for row_start in range(0, number_of_buildings, buildings_per_row):
+        current_row_buildings = buildings[row_start:row_start + buildings_per_row]
+        max_height = max(len(b[0]) for b in current_row_buildings)
+
+        padded_buildings = []
+        for building, width in current_row_buildings:
+            padding = [" " * width] * (max_height - len(building))
+            padded_buildings.append((padding + building, width))
+
+        for line_index in range(max_height):
+            for building_lines, width in padded_buildings:
+                print(building_lines[line_index].ljust(width), end="   ")
+            print()
+        print()
+        time.sleep(0.3)
+
+
 # Run the program
 if __name__ == "__main__":
     main()
