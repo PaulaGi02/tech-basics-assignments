@@ -11,14 +11,16 @@ def get_int_input(prompt, min_val, max_val):
             if min_val <= value <= max_val:
                 return value
             else:
-                print(f"Please choose a number between {min_val} to {max_val} .")
+                print(f"Please choose a number between {min_val} to {max_val}.")
         except ValueError:
             print("Please enter a valid number.")
+
+
 # Function to get 1–5 user-specified symbols or choose random defaults
 def get_symbol_input():
     while True:
         user_chars = input(
-            "Please enter 1 to 5 signs to build the windows and facade (z. B.: #|[]+o),\n"
+            "Please enter 1 to 5 signs to build the windows and facade (e.g.: #|[]+o),\n"
             "or press Enter for random characters: ")
         if user_chars == "":
             return ["#", "|", "+", "o", "[]"]
@@ -29,17 +31,13 @@ def get_symbol_input():
             return list(user_chars)
         else:
             print("Please enter 1-5 visible characters without spaces or commas.")
+
+
 # Simulated loading animation shown before skyline is built
-def loading_animation (duration = 3):
+def loading_animation(duration=3):
     frames = [
-        "[      ]",
-        "[=     ]",
-        "[==    ]",
-        "[===   ]",
-        "[ ===  ]",
-        "[  === ]",
-        "[   ===]",
-        "[    ==]"
+        "[      ]", "[=     ]", "[==    ]", "[===   ]",
+        "[ ===  ]", "[  === ]", "[   ===]", "[    ==]"
     ]
 
     start_time = time.time()
@@ -57,24 +55,28 @@ def generate_building(height, width, symbol):
     building = []
 
     # Roof of the building
-    roof = "+" + "-"
+    roof = "+" + "-" * (width - 2) + "+"
     building.append(roof)
 
     # Middle floors with chosen symbol
-    for _ in range(height - 2):  # Leave space for roof and door row
-        row = "|" + (symbol * (width - 2)) + "|"
+    symbol_width = len(symbol)
+    repeat_count = (width - 2) // symbol_width
+    for _ in range(height - 2):  # Leave space for roof and ground floor
+        content = (symbol * repeat_count).ljust(width - 2)
+        row = "|" + content + "|"
         building.append(row)
 
     # Ground floor with centered door
-    door_row = "|" + " "
+    door_row = "|" + " " * (width - 2) + "|"
     door_width = 2
     mid = width // 2
     door_start = mid - door_width // 2
     door_row = (
-            door_row[:door_start] + "[]" + door_row[door_start + door_width:]
+        door_row[:door_start] + "[]" + door_row[door_start + door_width:]
     )
     building.append(door_row)
-    return building
+
+    return building  # Return list of strings representing the building
 
 
 # Main function controlling the program flow
@@ -82,12 +84,12 @@ def main():
     print("Welcome to the tower generator! 🏙️")
     time.sleep(1)
 
-    # input
+    # User input
     number_of_buildings = get_int_input(
-        "How many tower would you like to build? Choose a number between one and twenty: ", 1, 20
+        "How many towers would you like to build? Choose a number between 1 and 20: ", 1, 20
     )
     buildings_per_row = get_int_input(
-        f"How many towers are supposed to be generated in one line? Choose a number between (1-{number_of_buildings}): ",
+        f"How many towers should be in one row? (1-{number_of_buildings}): ",
         1, number_of_buildings
     )
     building_symbols = get_symbol_input()
@@ -96,23 +98,26 @@ def main():
 
     print("\nYour skyline is ready! 🌆\n")
 
-# Generate buildings with random height and chosen symbol
+    # Generate buildings with random height and chosen symbol
     buildings = []
+    fixed_width = 14  # Ensures all symbols fit and buildings align
     for _ in range(number_of_buildings):
         height = random.randint(5, 20)
         symbol = random.choice(building_symbols)
-        width = 7
-        building = generate_building(height, width, symbol)
-        buildings.append((building, width))
+        building = generate_building(height, fixed_width, symbol)
+        buildings.append((building, fixed_width))
+
 
     for row_start in range(0, number_of_buildings, buildings_per_row):
         current_row_buildings = buildings[row_start:row_start + buildings_per_row]
         max_height = max(len(b[0]) for b in current_row_buildings)
 
+
         padded_buildings = []
         for building, width in current_row_buildings:
             padding = [" " * width] * (max_height - len(building))
             padded_buildings.append((padding + building, width))
+
 
         for line_index in range(max_height):
             for building_lines, width in padded_buildings:
