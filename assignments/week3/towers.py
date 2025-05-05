@@ -57,8 +57,17 @@ print("\nLoading complete!\n")
 # Function to generate an individual ASCII building
 def generate_building(height, width, symbol):
     building = []
+
+    # Roof of the building
     roof = "+" + "-"
     building.append(roof)
+
+    # Middle floors with chosen symbol
+    for _ in range(height - 2):  # Leave space for roof and door row
+        row = "|" + (symbol * (width - 2)) + "|"
+        building.append(row)
+
+    # Ground floor with centered door
     door_row = "|" + " "
     door_width = 2
     mid = width // 2
@@ -69,9 +78,7 @@ def generate_building(height, width, symbol):
     building.append(door_row)
     return building
 
-# Roof of the building
-# Middle floors with chosen symbol
-# Ground floor with centered door
+
 # Main function controlling the program flow
 def main():
     print("Welcome to the tower generator! 🏙️")
