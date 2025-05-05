@@ -55,6 +55,20 @@ print("\nLoading complete!\n")
 
 
 # Function to generate an individual ASCII building
+def generate_building(height, width, symbol):
+    building = []
+    roof = "+" + "-"
+    building.append(roof)
+    door_row = "|" + " "
+    door_width = 2
+    mid = width // 2
+    door_start = mid - door_width // 2
+    door_row = (
+            door_row[:door_start] + "[]" + door_row[door_start + door_width:]
+    )
+    building.append(door_row)
+    return building
+
 # Roof of the building
 # Middle floors with chosen symbol
 # Ground floor with centered door
