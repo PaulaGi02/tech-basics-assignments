@@ -30,28 +30,26 @@ def get_symbol_input():
         else:
             print("Please enter 1-5 visible characters without spaces or commas.")
 # Simulated loading animation shown before skyline is built
-frames = [
-    "[      ]",
-    "[=     ]",
-    "[==    ]",
-    "[===   ]",
-    "[ ===  ]",
-    "[  === ]",
-    "[   ===]",
-    "[    ==]"
-]
+def loading_animation (duration = 3):
+    frames = [
+        "[      ]",
+        "[=     ]",
+        "[==    ]",
+        "[===   ]",
+        "[ ===  ]",
+        "[  === ]",
+        "[   ===]",
+        "[    ==]"
+    ]
 
-duration = 5  # seconds
-start_time = time.time()
-
-while time.time() - start_time < duration:
-    for frame in frames:
-        sys.stdout.write('\rLoading ' + frame)
-        sys.stdout.flush()
-        time.sleep(0.2)
-        if time.time() - start_time >= duration:
-            break
-print("\nLoading complete!\n")
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        for frame in frames:
+            sys.stdout.write('\rLade Skyline ' + frame)
+            sys.stdout.flush()
+            time.sleep(0.15)
+            if time.time() - start_time >= duration:
+                break
 
 
 # Function to generate an individual ASCII building
