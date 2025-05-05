@@ -61,7 +61,7 @@ def generate_building(height, width, symbol):
     # Middle floors with chosen symbol
     symbol_width = len(symbol)
     repeat_count = (width - 2) // symbol_width
-    for _ in range(height - 2):  # Leave space for roof and ground floor
+    for _ in range(height - 2):
         content = (symbol * repeat_count).ljust(width - 2)
         row = "|" + content + "|"
         building.append(row)
@@ -76,7 +76,7 @@ def generate_building(height, width, symbol):
     )
     building.append(door_row)
 
-    return building  # Return list of strings representing the building
+    return building
 
 
 # Main function controlling the program flow
@@ -100,29 +100,27 @@ def main():
 
     # Generate buildings with random height and chosen symbol
     buildings = []
-    fixed_width = 14  # Ensures all symbols fit and buildings align
+    fixed_width = 14
     for _ in range(number_of_buildings):
         height = random.randint(5, 20)
         symbol = random.choice(building_symbols)
         building = generate_building(height, fixed_width, symbol)
         buildings.append((building, fixed_width))
 
-
     for row_start in range(0, number_of_buildings, buildings_per_row):
         current_row_buildings = buildings[row_start:row_start + buildings_per_row]
         max_height = max(len(b[0]) for b in current_row_buildings)
-
 
         padded_buildings = []
         for building, width in current_row_buildings:
             padding = [" " * width] * (max_height - len(building))
             padded_buildings.append((padding + building, width))
 
-
         for line_index in range(max_height):
             for building_lines, width in padded_buildings:
                 print(building_lines[line_index].ljust(width), end="   ")
             print()
+            time.sleep(0.05)
         print()
         time.sleep(0.3)
 
