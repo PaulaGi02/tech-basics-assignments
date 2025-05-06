@@ -3,7 +3,7 @@ import time
 import sys
 
 # constants
-typewriter_speed = 0.02
+TYPEWRITER_SPEED = 0.02
 DIET = ["vegetarian", "vegan"]
 ROLE = ["main", "sidekick"]
 FORM = ["mashed", "whole", "sliced"]
@@ -15,7 +15,7 @@ def typewriter(text):
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
-        time.sleep(0.02)
+        time.sleep(TYPEWRITER_SPEED)
 
 
 # Prints a message in a stylized box
@@ -26,7 +26,7 @@ def print_boxed(message):
     print(f"╚{border}╝")
 
 
-#checks if input is valid
+# checks if input is valid
 def user_choice(prompt, options):
     while True:
         choice = input(prompt).lower()
@@ -34,7 +34,8 @@ def user_choice(prompt, options):
             return choice
         print("Please enter a valid option.")
 
-#defining rating logic
+
+# defining rating logic
 def get_rating():
     while True:
         try:
@@ -48,7 +49,7 @@ def get_rating():
 
 # Returns the potato dish based on user preferences
 def determine_potato_destiny(diet, role, form, method):
-    #nested dictionary with all options and results
+    # nested dictionary with all options and results
     dishes = {
         "vegan": {
             "main": {
@@ -123,12 +124,13 @@ def determine_potato_destiny(diet, role, form, method):
             },
         }
     }
-    #this line gets final recipe from nested dictionary
-    return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method, "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
+    # this line gets final recipe from nested dictionary
+    return dishes.get(diet, {}).get(role, {}).get(form, {}).get(method,
+                                                                "Oops, that's not a valid combo. Potato wizard confused. 🧙‍♂️🥔")
 
 
-#Game logic
-#Collects user choices for diet, role, form, and method
+# Game logic
+# Collects user choices for diet, role, form, and method
 def get_user_preferences():
     diet = user_choice("\nWould you like the dish to be vegetarian or vegan?🍃 ", DIET)
     role = user_choice("\nShould the potato be the main ingredient or a sidekick?🍽️ ", ROLE)
@@ -136,7 +138,8 @@ def get_user_preferences():
     method = user_choice("\nWould you like to roast, bake or boil the potatoes?🔥 ", METHOD)
     return diet, role, form, method
 
-#game process
+
+# game process
 def main():
     typewriter(
         "Welcome to your potato destiny. Today we want to find the perfect potato dish for \033[1myou\033[0m,\n 🥔 because potato day is every day! 🥔")
@@ -150,11 +153,10 @@ def main():
     final_dish = determine_potato_destiny(diet, role, form, method)
     print_boxed(final_dish)
 
-    rating = get_rating()
+    get_rating()
     print("Thanks for your feedback! 🥔✨")
 
 
 # run
 if __name__ == "__main__":
     main()
-
