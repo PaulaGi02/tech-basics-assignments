@@ -44,7 +44,14 @@ def pick_up (item_name):
 
         print (f"There's no {item_name} here.")
 
-
+def drop_item(item_name):
+    for item in items_in_room:
+        if item['name'].lower() == item_name.lower():
+            inventory.remove(item)
+            items_in_room.append(item)
+            print (f"You've dropped {item['name']}.")
+            return
+        print (f"There's no {item_name} in your inventory.")
 
 
 
