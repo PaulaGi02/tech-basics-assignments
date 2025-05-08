@@ -29,6 +29,23 @@ def show_room_items():
         for items in items_in_room:
             print(f"- {items['name']}: {items['description']}")
 
+#picking up items
+def pick_up (item_name):
+    if len(inventory) >= MAX_INVENTORY_SIZE:
+        print ("Your inventory is full")
+        return
+
+    for item in items_in_room:
+        if item['name'].lower() == item_name.lower():
+            inventory.append(item)
+            items_in_room.remove(item)
+            print (f"You've picked up {item['name']}.")
+            return
+
+        print (f"There's no {item_name} here.")
+
+
+
 
 
 
