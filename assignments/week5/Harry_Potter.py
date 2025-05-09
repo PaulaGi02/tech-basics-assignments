@@ -1,60 +1,72 @@
 inventory = []
-
-# Items available in Gryffindor Common Room
-items_in_room = [{"name": "Wand", "type": "tool", "description": "Used to cast spells."},
-                 {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."},
-                 {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
-                 {"name": "Broken Quill", "type": "junk", "description": "Doesn't work anymore."},
-                 {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
-                 {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."}
-                 ]
 MAX_INVENTORY_SIZE = 5
 
+rooms = {
+    "Common Room": [
+        {"name": "Wand", "type": "tool", "description": "Used to cast spells."},
+        {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."},
+        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
+        {"name": "Broken Quill", "type": "junk", "description": "Doesn't work anymore."},
+        {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
+        {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."}
+    ],
+    "Library": [],
+    "Staircase": [],
+    "Hidden Hallway": [],
+    "Transfiguration Classroom": []
+}
+current_room = "Common Room"
 
-# displays all items you are carrying
+# Utility
+def get_items_in_current_room():
+    return rooms[current_room]
+
+# Display Inventory
 def show_inventory():
     if len(inventory) == 0:
-        print("inventory is empty")
+        print("Inventory is empty.")
     else:
-        print("You are carrying: ")
-        for items in inventory:
-            print(f"- {items['name']}")
+        print("You are carrying:")
+        for item in inventory:
+            print(f"- {item['name']}")
 
-# displays all items currently in the room
+# Display Room Items
 def show_room_items():
-    if len(inventory) == 0:
-        print("the room is empty")
+    items_in_room = get_items_in_current_room()
+    if len(items_in_room) == 0:
+        print("The room is empty.")
     else:
-        print("You are carrying: ")
-        for items in items_in_room:
-            print(f"- {items['name']}: {items['description']}")
+        print(f"In the {current_room}, you see:")
+        for item in items_in_room:
+            print(f"- {item['name']}: {item['description']}")
 
-# picking up items
+# Pick Up
 def pick_up(item_name):
+    items_in_room = get_items_in_current_room()
     if len(inventory) >= MAX_INVENTORY_SIZE:
-        print("Your inventory is full")
+        print("Your inventory is full.")
         return
 
     for item in items_in_room:
         if item['name'].lower() == item_name.lower():
             inventory.append(item)
             items_in_room.remove(item)
-            print(f"You've picked up {item['name']}.")
+            print(f"You picked up the {item['name']}.")
             return
 
-        print(f"There's no {item_name} here.")
+    print(f"There is no {item_name} here.")
 
-#dropping items
+# Drop
 def drop_item(item_name):
-    for item in items_in_room:
+    for item in inventory:
         if item['name'].lower() == item_name.lower():
             inventory.remove(item)
-            items_in_room.append(item)
-            print(f"You've dropped {item['name']}.")
+            get_items_in_current_room().append(item)
+            print(f"You dropped the {item['name']}.")
             return
-        print(f"There's no {item_name} in your inventory.")
+    print(f"You don’t have {item_name} in your inventory.")
 
-#use_items
+# Use Item
 def use(item_name):
     for item in inventory:
         if item['name'].lower() == item_name.lower():
@@ -73,44 +85,27 @@ def use(item_name):
             else:
                 print("You can’t use that.")
             return
-
     print(f"You don’t have {item_name} in your inventory.")
 
-#examine item
-def examine (item_name):
+# Examine
+def examine(item_name):
     for item in inventory:
         if item['name'].lower() == item_name.lower():
             print(f"{item['type']}: {item['description']}")
             return
 
-    for item in items_in_room:
+    for item in get_items_in_current_room():
         if item['name'].lower() == item_name.lower():
             print(f"{item['type']}: {item['description']}")
             return
 
-    print(f"You don't see any item called {item_name}.")
+    print(f"You don't see any item called '{item_name}'.")
 
-#rooms
-rooms = {
-    "Common Room": [
-        {"name": "Wand", "type": "tool", "description": "Used to cast spells."}
-    ],
-    "Library": [
-        {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."}
-    ],
-    "Staircase": [
-        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."}
-    ],
-    "Hidden Hallway": [],  # Only becomes accessible with Map
-    "Transfiguration Classroom": []  # Final room
-}
-current_room = "Common Room"
-
-def get_items_in_current_room():
-    return rooms[current_room]
-
+# Move Between Rooms
 def move(room_name):
     global current_room
+    room_name = room_name.title()
+
     if room_name not in rooms:
         print("That room doesn't exist.")
         return
@@ -125,7 +120,7 @@ def move(room_name):
     print(f"You move to the {room_name}.")
     show_room_items()
 
-    # Check for victory
+    # Check victory
     if current_room == "Transfiguration Classroom":
         has_wand = any(item['name'].lower() == "wand" for item in inventory)
         if has_wand:
@@ -134,7 +129,53 @@ def move(room_name):
         else:
             print("You made it to the classroom, but you forgot your wand! Go back and get it.")
 
-def game_loop ():
-    elif command.startswith("go "):
-    room_name = command[3:].title()  # capitalize first letter
-    move(room_name)
+# Game Loop
+def game_loop():
+    print("🏰 Welcome to Hogwarts Adventure!")
+    print("Type 'help' to see a list of commands.")
+
+    while True:
+        command = input("\n> ").strip().lower()
+
+        if command == "help":
+            print("Commands:")
+            print("  inventory - Show your items")
+            print("  look - Look around the room")
+            print("  pickup [item] - Pick up an item")
+            print("  drop [item] - Drop an item")
+            print("  use [item] - Use an item")
+            print("  examine [item] - Look at an item")
+            print("  go [room] - Move to another room")
+            print("  quit - Exit game")
+
+        elif command == "inventory":
+            show_inventory()
+
+        elif command == "look":
+            show_room_items()
+
+        elif command.startswith("pickup "):
+            pick_up(command[7:].strip())
+
+        elif command.startswith("drop "):
+            drop_item(command[5:].strip())
+
+        elif command.startswith("use "):
+            use(command[4:].strip())
+
+        elif command.startswith("examine "):
+            examine(command[8:].strip())
+
+        elif command.startswith("go "):
+            move(command[3:].strip())
+
+        elif command == "quit":
+            print("Thanks for playing! Goodbye.")
+            break
+
+        else:
+            print("Unknown command. Type 'help' for a list.")
+
+# Start Game
+if __name__ == "__main__":
+    game_loop()
