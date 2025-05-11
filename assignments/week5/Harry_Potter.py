@@ -1,227 +1,195 @@
 import random
+import sys
+import time
 
+# --- Typewriter Effect ---
+def typewriter(text, delay=0.02):
+    for char in text:
+        print(char, end='', flush=True)
+        time.sleep(delay)
+    print()
+
+# --- Game State ---
 inventory = []
 MAX_INVENTORY_SIZE = 5
 PEEVES_PRESENT = False
-
-rooms = {
-    "Common Room": [
-        {"name": "Wand", "type": "tool", "description": "Used to cast spells."},
-        {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."},
-        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
-        {"name": "Broken Quill", "type": "junk", "description": "Doesn't work anymore."},
-        {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
-        {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."}
-    ],
-    "Library": [],
-    "Staircase": [{"name": "Key", "type": "tool", "description": "Opens locked doors"}],
-    "Hidden Hallway": [],
-    "Transfiguration Classroom": []
-}
+map_skip_used = False
 current_room = "Common Room"
 
-locked_rooms = [
-    {"Library": "Key"},
-    {"Transfiguration Classroom": "Wand"},
+# --- Rooms and Items ---
+rooms = {
+    "Common Room": [
+        {"name": "Broken Quill", "type": "junk", "description": "Doesn't work anymore."},
+        {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."},
+        {"name": "Key", "type": "tool", "description": "Opens locked doors."}
+    ],
+    "Library": [
+        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
+        {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
+    ],
+    "Staircase": [
+        {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."},
+    ],
+    "Hidden Hallway": [
+        {"name": "Wand", "type": "tool", "description": "Used to cast spells."}
+    ],
+    "Transfiguration Classroom": []
+}
 
+room_sequence = [
+    {"name": "Common Room", "requires": None},
+    {"name": "Library", "requires": "Key"},
+    {"name": "Staircase", "requires": "Invisibility Cloak"},
+    {"name": "Hidden Hallway", "requires": "Marauder's Map"},
+    {"name": "Transfiguration Classroom", "requires": "Wand"},
 ]
 
-# Utility
+# --- Helpers ---
 def get_items_in_current_room():
     return rooms[current_room]
 
-# Display Inventory
 def show_inventory():
-    if len(inventory) == 0:
-        print("Inventory is empty.")
+    if not inventory:
+        typewriter("You’re not carrying anything.")
     else:
-        print("You are carrying:")
+        typewriter("You are carrying:")
         for item in inventory:
-            print(f"- {item['name']}")
+            typewriter(f"- {item['name']}")
 
-# Display Room Items
 def show_room_items():
-    items_in_room = get_items_in_current_room()
-    if len(items_in_room) == 0:
-        print("The room is empty.")
+    items = get_items_in_current_room()
+    if not items:
+        typewriter("There’s nothing interesting here.")
     else:
-        print(f"In the {current_room}, you see:")
-        for item in items_in_room:
-            print(f"- {item['name']}: {item['description']}")
+        typewriter(f"In the {current_room}, you see:")
+        for item in items:
+            typewriter(f"- {item['name']}: {item['description']}")
 
-# Pick Up
+def present_item_options(item):
+    #options = []
+    name = item['name'].lower()
+
+    if name == "key":
+        options = ["Try to open a nearby locked door.",
+                   "Scratch your name into the wood.",
+                   "Drop it and kick it around like a football."]
+    elif name == "marauder's map":
+        options = ["Use it to find a hidden path.",
+                   "Fold it into a paper hat.",
+                   "Tap it and say 'Mischief Managed'."]
+    elif name == "pumpkin juice":
+        options = ["Drink it.",
+                   "Throw it on the wall.",
+                   "Use it to water a plant."]
+    elif name == "chocolate frog":
+        options = ["Eat it.",
+                   "Let it hop around.",
+                   "Trade it with a friend."]
+    elif name == "wand":
+        options = ["Cast Lumos.",
+                   "Use it as a drumstick.",
+                   "Try to transfigure your shoe."]
+    else:
+        options = ["Put it in your pocket.",
+                   "Sniff it cautiously.",
+                   "Tap it on your head."]
+
+    typewriter("What would you like to do with the item?")
+    for i, option in enumerate(options, 1):
+        typewriter(f"  {i}) {option}")
+    choice = input("> ").strip()
+
+    if name == "key" and choice == "1":
+        advance_to_room("Library")
+    elif name == "marauder's map" and choice == "1":
+        reveal_hidden_path()
+    elif name == "wand" and choice == "1":
+        typewriter("You cast Lumos. The room glows with light.")
+    elif name == "pumpkin juice" and choice == "1":
+        typewriter("Delicious! You feel warm inside.")
+    elif name == "chocolate frog" and choice == "1":
+        typewriter("It wiggles in your mouth! You gain energy.")
+    else:
+        typewriter("Nothing much happens, but it was worth a try.")
+
+def reveal_hidden_path():
+    global map_skip_used
+    if map_skip_used:
+        typewriter("You've already used the map once. It fades away.")
+    else:
+        map_skip_used = True
+        typewriter("You find a secret stairwell behind the bookshelf!")
+        advance_to_room("Hidden Hallway")
+
 def pick_up(item_name):
-    items_in_room = get_items_in_current_room()
     if len(inventory) >= MAX_INVENTORY_SIZE:
-        print("Your inventory is full.")
+        typewriter("You can't carry any more items.")
         return
-
-    for item in items_in_room:
-        if item['name'].lower() == item_name.lower():
-            inventory.append(item)
-            items_in_room.remove(item)
-            print(f"You picked up the {item['name']}.")
-            return
-
-    print(f"There is no {item_name} here.")
-
-    if item['name'].lower() == "chocolate frog":
-        if random.random() < 0.5:
-            print("The chocolate frog jumps away.")
-            return
-
-# Drop
-def drop_item(item_name):
-    if PEEVES_PRESENT:
-        has_cloak = any(item['name'].lower() == "invisibility cloak" for item in inventory)
-        if not has_cloak:
-            print("Peeves blocks your action! You need the Invisibility Cloak!")
-            return
-
-    for item in inventory:
-        if item['name'].lower() == item_name.lower():
-            inventory.remove(item)
-            get_items_in_current_room().append(item)
-            print(f"You dropped the {item['name']}.")
-            return
-    print(f"You don’t have {item_name} in your inventory.")
-
-# Use Item
-def use(item_name):
-    if PEEVES_PRESENT:
-        has_cloak = any(item['name'].lower() == "invisible cloak" for item in inventory)
-        if not has_cloak:
-            print ("Peeves blocks your action! You need the Invisibility Cloak!")
-            return
-
-    for item in inventory:
-        if item['name'].lower() == item_name.lower():
-            if item['type'] == "food":
-                print(f"You eat the {item['name']}. You feel refreshed.")
-                inventory.remove(item)
-            elif item['type'] == "tool":
-                if item['name'].lower() == "wand":
-                    print("You cast Lumos. The hallway lights up.")
-                elif item['name'].lower() == "marauder's map":
-                    print("You unfold the Marauder’s Map. A hidden path is revealed.")
-                elif item['name'].lower() == "invisibility cloak":
-                    print("You vanish under the Invisibility Cloak.")
-                else:
-                    print(f"You use the {item['name']}, but nothing happens.")
-            else:
-                print("You can’t use that.")
-            return
-    print(f"You don’t have {item_name} in your inventory.")
-
-# Examine
-def examine(item_name):
-    for item in inventory:
-        if item['name'].lower() == item_name.lower():
-            print(f"{item['type']}: {item['description']}")
-            return
 
     for item in get_items_in_current_room():
         if item['name'].lower() == item_name.lower():
-            print(f"{item['type']}: {item['description']}")
+            if item['name'].lower() == "chocolate frog" and random.random() < 0.5:
+                typewriter("The chocolate frog jumps away!")
+                return
+            inventory.append(item)
+            get_items_in_current_room().remove(item)
+            typewriter(f"You picked up the {item['name']}.")
+            present_item_options(item)
             return
 
-    print(f"You don't see any item called '{item_name}'.")
+    typewriter("That item isn't here.")
 
-# Move Between Rooms
-def move(room_name):
-    global current_room
-    room_name = room_name.title()
+def examine(item_name):
+    for item in inventory + get_items_in_current_room():
+        if item['name'].lower() == item_name.lower():
+            typewriter(f"You examine the {item['name']}. {item['description']}")
+            present_item_options(item)
+            return
+    typewriter("You can’t find that item to examine.")
 
-    def check_for_peeves():
-        global PEEVES_PRESENT
-        if random.random() < 0.3:
-            PEEVES_PRESENT = True
-            print("👻 Peeves appears, cackling madly! He blocks your path!")
+def advance_to_room(target_room):
+    global current_room, PEEVES_PRESENT
+    current_room = target_room
+    typewriter(f"You move into the {target_room}.")
+    if random.random() < 0.3:
+        PEEVES_PRESENT = True
+        typewriter("👻 Peeves the Poltergeist appears! He cackles wildly.")
+    else:
+        PEEVES_PRESENT = False
+    show_room_items()
+    if target_room == "Transfiguration Classroom":
+        if any(i['name'].lower() == "wand" for i in inventory):
+            typewriter("✨ Professor McGonagall nods approvingly. You've made it with your wand. You win! ✨")
+            sys.exit()
         else:
-            PEEVES_PRESENT = False
+            typewriter("You're here... but no wand? Go back and find it!")
 
-
-    if room_name not in rooms:
-        print("That room doesn't exist.")
-        return
-
-    if room_name == "Hidden Hallway":
-        has_map = any(item['name'].lower() == "marauder's map" for item in inventory)
-        if not has_map:
-            print("You need the Marauder’s Map to find that room.")
-            return
-
-    current_room = room_name
-    print(f"You move to the {room_name}.")
-    check_for_peeves()
+def game_intro():
+    typewriter("\n\U0001F3EB Welcome to the Hogwarts Adventure Game!\n")
+    typewriter("You wake up in the Gryffindor Common Room. Classes are about to begin.")
+    typewriter("Your goal: Reach the Transfiguration Classroom in time – and don’t forget your wand!")
+    typewriter("Along the way, collect magical tools, dodge Peeves, and unlock secret paths.")
+    typewriter("Type commands like: pickup [item], examine [item], inventory, or quit\n")
     show_room_items()
 
-    for room_name in locked_rooms:
-        has_key = any(item['name'].lower() == "key" for item in inventory)
-        if not has_key:
-            print(f"You need the key to enter {room_name}.")
-            return
-        else:
-            print ("You use the key to unlock the door.")
-            locked_rooms.remove(room_name)
-
-
-    # Check victory
-    if current_room == "Transfiguration Classroom":
-        has_wand = any(item['name'].lower() == "wand" for item in inventory)
-        if has_wand:
-            print("✨ Professor McGonagall nods approvingly. You've made it to class with your wand. You win! ✨")
-            exit()
-        else:
-            print("You made it to the classroom, but you forgot your wand! Go back and get it.")
-
-# Game Loop
 def game_loop():
-    print("🏰 Welcome to Hogwarts Adventure!")
-    print("Type 'help' to see a list of commands.")
-
+    game_intro()
     while True:
         command = input("\n> ").strip().lower()
 
-        if command == "help":
-            print("Commands:")
-            print("  inventory - Show your items")
-            print("  look - Look around the room")
-            print("  pickup [item] - Pick up an item")
-            print("  drop [item] - Drop an item")
-            print("  use [item] - Use an item")
-            print("  examine [item] - Look at an item")
-            print("  go [room] - Move to another room")
-            print("  quit - Exit game")
-
+        if command == "quit":
+            typewriter("Thanks for playing! Mischief managed.")
+            break
         elif command == "inventory":
             show_inventory()
-
         elif command == "look":
             show_room_items()
-
         elif command.startswith("pickup "):
             pick_up(command[7:].strip())
-
-        elif command.startswith("drop "):
-            drop_item(command[5:].strip())
-
-        elif command.startswith("use "):
-            use(command[4:].strip())
-
         elif command.startswith("examine "):
             examine(command[8:].strip())
-
-        elif command.startswith("go "):
-            move(command[3:].strip())
-
-        elif command == "quit":
-            print("Thanks for playing! Goodbye.")
-            break
-
         else:
-            print("Unknown command. Type 'help' for a list.")
+            typewriter("Unknown command. Try: pickup, examine, inventory, or quit.")
 
-# Start Game
 if __name__ == "__main__":
     game_loop()
