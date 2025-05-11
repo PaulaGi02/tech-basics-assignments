@@ -2,36 +2,42 @@ import random
 import sys
 import time
 
-# --- Typewriter Effect ---
+# Typewriter Effect
 def typewriter(text, delay=0.02):
     for char in text:
         print(char, end='', flush=True)
         time.sleep(delay)
     print()
 
-# --- Game State ---
+# Game State
 inventory = []
 MAX_INVENTORY_SIZE = 5
 PEEVES_PRESENT = False
 map_skip_used = False
 current_room = "Common Room"
 
-# --- Rooms and Items ---
+# Rooms and Items
 rooms = {
     "Common Room": [
         {"name": "Broken Quill", "type": "junk", "description": "Doesn't work anymore."},
         {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."},
-        {"name": "Key", "type": "tool", "description": "Opens locked doors."}
+        {"name": "Key", "type": "tool", "description": "Opens locked doors."},
+        {"name": "Gryffindor Scarf", "type": "clothing", "description": "Keeps you warm and shows your house pride."},
     ],
     "Library": [
         {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
         {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
+        {"name": "Spellbook", "type": "tool", "description": "Contains powerful spells for advanced wizards."},
+        {"name": "Quill of Quick Quotes", "type": "tool", "description": "Writes down everything you say, often exaggerated."}
     ],
     "Staircase": [
         {"name": "Marauder's Map", "type": "tool", "description": "Reveals hidden rooms."},
+        {"name": "Vanishing Cabinet Handle", "type": "junk", "description": "A broken part from a Vanishing Cabinet."},
+        {"name": "Exploding Snap Cards", "type": "game", "description": "Be careful! They might explode in your hand."}
     ],
     "Hidden Hallway": [
-        {"name": "Wand", "type": "tool", "description": "Used to cast spells."}
+        {"name": "Wand", "type": "tool", "description": "Used to cast spells."},
+        {"name": "Hufflepuff's Cup Replica", "type": "artifact", "description": "A fake replica of the legendary cup."}
     ],
     "Transfiguration Classroom": []
 }
@@ -39,12 +45,12 @@ rooms = {
 room_sequence = [
     {"name": "Common Room", "requires": None},
     {"name": "Library", "requires": "Key"},
-    {"name": "Staircase", "requires": "Invisibility Cloak"},
+    {"name": "Staircase", "requires": "Invisibility Cloak"},  # Already handled
     {"name": "Hidden Hallway", "requires": "Marauder's Map"},
     {"name": "Transfiguration Classroom", "requires": "Wand"},
 ]
 
-# --- Helpers ---
+# Helpers
 def get_items_in_current_room():
     return rooms[current_room]
 
@@ -66,9 +72,7 @@ def show_room_items():
             typewriter(f"- {item['name']}: {item['description']}")
 
 def present_item_options(item):
-    #options = []
     name = item['name'].lower()
-
     if name == "key":
         options = ["Try to open a nearby locked door.",
                    "Scratch your name into the wood.",
@@ -134,7 +138,7 @@ def pick_up(item_name):
             inventory.append(item)
             get_items_in_current_room().remove(item)
             typewriter(f"You picked up the {item['name']}.")
-            present_item_options(item)
+            present_item_options(item)  # Only show options after pickup
             return
 
     typewriter("That item isn't here.")
@@ -142,13 +146,20 @@ def pick_up(item_name):
 def examine(item_name):
     for item in inventory + get_items_in_current_room():
         if item['name'].lower() == item_name.lower():
-            typewriter(f"You examine the {item['name']}. {item['description']}")
-            present_item_options(item)
+            typewriter(f"You examine the {item['name']}: {item['description']}")  # Only describe item
             return
     typewriter("You can’t find that item to examine.")
 
 def advance_to_room(target_room):
     global current_room, PEEVES_PRESENT
+
+    # Check if required item is in inventory before moving to specific rooms
+    room_req = next((r for r in room_sequence if r["name"] == target_room), None)
+    if room_req and room_req["requires"]:
+        if not any(i['name'].lower() == room_req["requires"].lower() for i in inventory):
+            typewriter(f"You need the {room_req['requires']} to enter the {target_room}.")
+            return
+
     current_room = target_room
     typewriter(f"You move into the {target_room}.")
     if random.random() < 0.3:
@@ -188,8 +199,10 @@ def game_loop():
             pick_up(command[7:].strip())
         elif command.startswith("examine "):
             examine(command[8:].strip())
+        elif command.startswith("go to "):
+            advance_to_room(command[6:].strip().title())
         else:
-            typewriter("Unknown command. Try: pickup, examine, inventory, or quit.")
+            typewriter("Unknown command. Try: pickup, examine, inventory, look, or quit.")
 
 if __name__ == "__main__":
     game_loop()
