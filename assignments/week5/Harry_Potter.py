@@ -14,7 +14,7 @@ rooms = {
         {"name": "Pumpkin Juice", "type": "food", "description": "A tasty Hogwarts drink."}
     ],
     "Library": [],
-    "Staircase": [],
+    "Staircase": [{"name": "Key", "type": "tool", "description": "Opens locked doors"}],
     "Hidden Hallway": [],
     "Transfiguration Classroom": []
 }
@@ -64,6 +64,11 @@ def pick_up(item_name):
             return
 
     print(f"There is no {item_name} here.")
+
+    if item['name'].lower() == "chocolate frog":
+        if random.random() < 0.5:
+            print("The chocolate frog jumps away.")
+            return
 
 # Drop
 def drop_item(item_name):
