@@ -1,5 +1,8 @@
+import random
+
 inventory = []
 MAX_INVENTORY_SIZE = 5
+PEEVES_PRESENT = False
 
 rooms = {
     "Common Room": [
@@ -16,6 +19,12 @@ rooms = {
     "Transfiguration Classroom": []
 }
 current_room = "Common Room"
+
+locked_rooms = [
+    {"Library": "Key"},
+    {"Transfiguration Classroom": "Wand"},
+
+]
 
 # Utility
 def get_items_in_current_room():
@@ -58,6 +67,12 @@ def pick_up(item_name):
 
 # Drop
 def drop_item(item_name):
+    if PEEVES_PRESENT:
+        has_cloak = any(item['name'].lower() == "invisibility cloak" for item in inventory)
+        if not has_cloak:
+            print("Peeves blocks your action! You need the Invisibility Cloak!")
+            return
+
     for item in inventory:
         if item['name'].lower() == item_name.lower():
             inventory.remove(item)
@@ -68,6 +83,12 @@ def drop_item(item_name):
 
 # Use Item
 def use(item_name):
+    if PEEVES_PRESENT:
+        has_cloak = any(item['name'].lower() == "invisible cloak" for item in inventory)
+        if not has_cloak:
+            print ("Peeves blocks your action! You need the Invisibility Cloak!")
+            return
+
     for item in inventory:
         if item['name'].lower() == item_name.lower():
             if item['type'] == "food":
@@ -106,6 +127,15 @@ def move(room_name):
     global current_room
     room_name = room_name.title()
 
+    def check_for_peeves():
+        global PEEVES_PRESENT
+        if random.random() < 0.3:
+            PEEVES_PRESENT = True
+            print("👻 Peeves appears, cackling madly! He blocks your path!")
+        else:
+            PEEVES_PRESENT = False
+
+
     if room_name not in rooms:
         print("That room doesn't exist.")
         return
@@ -118,7 +148,18 @@ def move(room_name):
 
     current_room = room_name
     print(f"You move to the {room_name}.")
+    check_for_peeves()
     show_room_items()
+
+    for room_name in locked_rooms:
+        has_key = any(item['name'].lower() == "key" for item in inventory)
+        if not has_key:
+            print(f"You need the key to enter {room_name}.")
+            return
+        else:
+            print ("You use the key to unlock the door.")
+            locked_rooms.remove(room_name)
+
 
     # Check victory
     if current_room == "Transfiguration Classroom":
