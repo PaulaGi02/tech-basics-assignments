@@ -27,7 +27,6 @@ rooms = {
         {"name": "Gryffindor Scarf", "type": "clothing", "description": "Keeps you warm and shows your house pride."},
     ],
     "Library": [
-        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."},
         {"name": "Invisibility Cloak", "type": "tool", "description": "Makes you invisible to Peeves."},
         {"name": "Spellbook", "type": "tool", "description": "Contains powerful spells for advanced wizards."},
         {"name": "Quill of Quick Quotes", "type": "tool",
@@ -41,7 +40,8 @@ rooms = {
     ],
     "Hidden Hallway": [
         {"name": "Wand", "type": "tool", "description": "Used to cast spells."},
-        {"name": "Dobby", "type": "toy", "description": "A tiny elf, sometimes searching for trouble."}
+        {"name": "Dobby", "type": "toy", "description": "A tiny elf, sometimes searching for trouble."},
+        {"name": "Chocolate Frog", "type": "food", "description": "Restores energy."}
     ],
     "Transfiguration Classroom": []
 }
@@ -177,17 +177,51 @@ def examine(item_name):
 
 
 def use(item_name):
+    global map_skip_used
     for item in inventory:
         if item['name'].lower() == item_name.lower():
+            item_name_lower = item['name'].lower()
+
+            if item_name_lower == "marauder's map":
+                if current_room == "Library":
+                    if PEEVES_PRESENT:
+                        typewriter("👻 Peeves is causing chaos in the Library! You can't focus on the map right now.")
+                        return
+                    if not map_skip_used:
+                        map_skip_used = True
+                        typewriter("The map glows and reveals a hidden hallway behind the bookshelves!")
+                        advance_to_room("Hidden Hallway")
+                    return
+
+                elif current_room == "Staircase":
+                    if not map_skip_used:
+                        map_skip_used = True
+                        typewriter("You tap the Marauder's Map and it reveals a hidden stairwell!")
+                        advance_to_room("Hidden Hallway")
+                    return
+                else:
+                    typewriter("You can’t use the map here.")
+                    return
+
+            if item_name_lower == "invisibility cloak":
+                if current_room == "Library":
+                    typewriter("You wear the Invisibility Cloak and sneak past Peeves.")
+                    advance_to_room("Staircase")
+                else:
+                    typewriter("You hide under the cloak, but nothing interesting happens here.")
+                return
+
+            # Default option menu for other items
             present_item_options(item)
             return
+
     typewriter("You're not carrying that item.")
+
+
 
 
 def advance_to_room(target_room):
     global current_room, PEEVES_PRESENT
-
-    current_req = next((r["requires"] for r in room_sequence if r["name"] == target_room), None)
 
     if target_room == "Staircase":
         if PEEVES_PRESENT:
@@ -198,26 +232,31 @@ def advance_to_room(target_room):
             if not any(i['name'].lower() in ["invisibility cloak", "marauder's map"] for i in inventory):
                 typewriter("You need either the Invisibility Cloak or the Marauder’s Map to proceed.")
                 return
-    elif current_req:
-        if not any(i['name'].lower() == current_req.lower() for i in inventory):
-            typewriter(f"You need the {current_req} to enter {target_room}.")
-            return
 
+    elif target_room == "Hidden Hallway":
+        if not map_skip_used:
+            if not any(i['name'].lower() == "marauder's map" for i in inventory):
+                typewriter("You need the Marauder’s Map to find the hidden hallway.")
+                return
+
+    elif target_room == "Transfiguration Classroom":
+        if not any(i['name'].lower() == "wand" for i in inventory):
+            typewriter("You’re here… but no wand? McGonagall looks disappointed!")
+            sys.exit()
+
+    # Move to room
     current_room = target_room
     typewriter(f"You move into the {target_room}.")
 
-    PEEVES_PRESENT = (target_room == "Library" and random.random() < 0.5)
-    if PEEVES_PRESENT:
-        typewriter("👻 Peeves the Poltergeist appears! He cackles wildly. Try to sneak around him.")
-
     if target_room == "Transfiguration Classroom":
-        if any(i['name'].lower() == "wand" for i in inventory):
-            typewriter("✨ Professor McGonagall nods approvingly. You've made it with your wand. You win! ✨")
-            sys.exit()
-        else:
-            typewriter("You're here... but no wand? Go back and find it!")
-    else:
-        show_room_items()
+        typewriter("✨ Professor McGonagall nods approvingly. You've made it with your wand. You win! ✨")
+        sys.exit()
+    elif target_room == "Library":
+        PEEVES_PRESENT = random.random() < 0.5
+        if PEEVES_PRESENT:
+            typewriter("👻 Peeves the Poltergeist appears! He cackles wildly. Try to sneak around him.")
+    show_room_items()
+
 
 
 def show_help():
