@@ -37,7 +37,7 @@ rooms = {
     ],
     "Hidden Hallway": [
         {"name": "Wand", "type": "tool", "description": "Used to cast spells."},
-        {"name": "Hufflepuff's Cup Replica", "type": "artifact", "description": "A fake replica of the legendary cup."}
+        {"name": "Dobby", "type": "toy", "description": "A tiny elf, sometimes searching for trouble."}
     ],
     "Transfiguration Classroom": []
 }
@@ -45,7 +45,7 @@ rooms = {
 room_sequence = [
     {"name": "Common Room", "requires": None},
     {"name": "Library", "requires": "Key"},
-    {"name": "Staircase", "requires": "Invisibility Cloak"},  # Already handled
+    {"name": "Staircase", "requires": "Invisibility Cloak"},  # Logic adjusted for Peeves
     {"name": "Hidden Hallway", "requires": "Marauder's Map"},
     {"name": "Transfiguration Classroom", "requires": "Wand"},
 ]
@@ -64,12 +64,30 @@ def show_inventory():
 
 def show_room_items():
     items = get_items_in_current_room()
+    if current_room == "Transfiguration Classroom":
+        return
     if not items:
         typewriter("There’s nothing interesting here.")
     else:
         typewriter(f"In the {current_room}, you see:")
         for item in items:
-            typewriter(f"- {item['name']}: {item['description']}")
+            typewriter(f"- {item['name']}")
+
+def drop(item_name):
+    for item in inventory:
+        if item['name'].lower() == item_name.lower():
+            inventory.remove(item)
+            rooms[current_room].append(item)
+            typewriter(f"You dropped the {item['name']}.")
+            return
+    typewriter("You don’t have that item.")
+
+def use(item_name):
+    for item in inventory:
+        if item['name'].lower() == item_name.lower():
+            present_item_options(item)
+            return
+    typewriter("You don’t have that item.")
 
 def present_item_options(item):
     name = item['name'].lower()
@@ -78,9 +96,9 @@ def present_item_options(item):
                    "Scratch your name into the wood.",
                    "Drop it and kick it around like a football."]
     elif name == "marauder's map":
-        options = ["Use it to find a hidden path.",
-                   "Fold it into a paper hat.",
-                   "Tap it and say 'Mischief Managed'."]
+        options = ["Fold it into a paper hat.",
+                   "Tap it and say 'Mischief Managed'.",
+                   "Use it to find a hidden path."]
     elif name == "pumpkin juice":
         options = ["Drink it.",
                    "Throw it on the wall.",
@@ -93,6 +111,14 @@ def present_item_options(item):
         options = ["Cast Lumos.",
                    "Use it as a drumstick.",
                    "Try to transfigure your shoe."]
+    elif name == "invisibility cloak":
+        options = ["Put it on your head.",
+                   "Use it to make shadow puppets.",
+                   "Bundle it like a pillow."]
+    elif name == "dobby":
+        options = ["command dobby to moonwalk.",
+                   "Give him a tiny sock.",
+                   "give him high five."]
     else:
         options = ["Put it in your pocket.",
                    "Sniff it cautiously.",
@@ -103,9 +129,10 @@ def present_item_options(item):
         typewriter(f"  {i}) {option}")
     choice = input("> ").strip()
 
+    # Handle item logic
     if name == "key" and choice == "1":
         advance_to_room("Library")
-    elif name == "marauder's map" and choice == "1":
+    elif name == "marauder's map" and choice == "3":
         reveal_hidden_path()
     elif name == "wand" and choice == "1":
         typewriter("You cast Lumos. The room glows with light.")
@@ -113,6 +140,14 @@ def present_item_options(item):
         typewriter("Delicious! You feel warm inside.")
     elif name == "chocolate frog" and choice == "1":
         typewriter("It wiggles in your mouth! You gain energy.")
+    elif name == "invisibility cloak" and choice == "1":
+        typewriter("You were able to sneak quietly through the library.")
+        advance_to_room("Staircase")
+    elif name == "dobby" and choice == "1":
+        typewriter("dobby busts out a moonwalk. It's oddly inspiring. ")
+    elif name == "dobby" and choice == "2":
+        typewriter ("You make Dobby the happiest elf. He taps and suddenly you find yourself in the Transfiguration Classroom")
+        advance_to_room("Transfiguration Classroom")
     else:
         typewriter("Nothing much happens, but it was worth a try.")
 
@@ -122,7 +157,7 @@ def reveal_hidden_path():
         typewriter("You've already used the map once. It fades away.")
     else:
         map_skip_used = True
-        typewriter("You find a secret stairwell behind the bookshelf!")
+        typewriter("You find a secret stairwell!")
         advance_to_room("Hidden Hallway")
 
 def pick_up(item_name):
@@ -136,9 +171,7 @@ def pick_up(item_name):
                 typewriter("The chocolate frog jumps away!")
                 return
             inventory.append(item)
-            get_items_in_current_room().remove(item)
             typewriter(f"You picked up the {item['name']}.")
-            present_item_options(item)  # Only show options after pickup
             return
 
     typewriter("That item isn't here.")
@@ -146,28 +179,40 @@ def pick_up(item_name):
 def examine(item_name):
     for item in inventory + get_items_in_current_room():
         if item['name'].lower() == item_name.lower():
-            typewriter(f"You examine the {item['name']}: {item['description']}")  # Only describe item
+            typewriter(f"You examine the {item['name']}: {item['description']}")
             return
     typewriter("You can’t find that item to examine.")
 
 def advance_to_room(target_room):
     global current_room, PEEVES_PRESENT
 
-    # Check if required item is in inventory before moving to specific rooms
-    room_req = next((r for r in room_sequence if r["name"] == target_room), None)
-    if room_req and room_req["requires"]:
-        if not any(i['name'].lower() == room_req["requires"].lower() for i in inventory):
-            typewriter(f"You need the {room_req['requires']} to enter the {target_room}.")
+    # Determine room requirement
+    current_req = next((r["requires"] for r in room_sequence if r["name"] == target_room), None)
+
+    if target_room == "Staircase":
+        if PEEVES_PRESENT:
+            if not any(i['name'].lower() == "invisibility cloak" for i in inventory):
+                typewriter("👻 Peeves blocks your way! You need the Invisibility Cloak to sneak past.")
+                return
+        else:
+            if not any(i['name'].lower() in ["invisibility cloak", "marauder's map"] for i in inventory):
+                typewriter("You need either the Invisibility Cloak or the Marauder’s Map to proceed.")
+                return
+    elif current_req:
+        if not any(i['name'].lower() == current_req.lower() for i in inventory):
+            typewriter(f"You need the {current_req} to enter {target_room}.")
             return
 
     current_room = target_room
     typewriter(f"You move into the {target_room}.")
-    if random.random() < 0.3:
-        PEEVES_PRESENT = True
-        typewriter("👻 Peeves the Poltergeist appears! He cackles wildly.")
-    else:
-        PEEVES_PRESENT = False
+
+    # Peeves only appears in Library
+    PEEVES_PRESENT = (target_room == "Library" and random.random() < 0.5)
+    if PEEVES_PRESENT:
+        typewriter("👻 Peeves the Poltergeist appears! He cackles wildly. Try to sneak around him.")
+
     show_room_items()
+
     if target_room == "Transfiguration Classroom":
         if any(i['name'].lower() == "wand" for i in inventory):
             typewriter("✨ Professor McGonagall nods approvingly. You've made it with your wand. You win! ✨")
@@ -176,11 +221,12 @@ def advance_to_room(target_room):
             typewriter("You're here... but no wand? Go back and find it!")
 
 def game_intro():
-    typewriter("\n\U0001F3EB Welcome to the Hogwarts Adventure Game!\n")
+    typewriter("\n🏰 Welcome to the Hogwarts Adventure Game!\n")
     typewriter("You wake up in the Gryffindor Common Room. Classes are about to begin.")
-    typewriter("Your goal: Reach the Transfiguration Classroom in time – and don’t forget your wand!")
-    typewriter("Along the way, collect magical tools, dodge Peeves, and unlock secret paths.")
-    typewriter("Type commands like: pickup [item], examine [item], inventory, or quit\n")
+    typewriter("Your goal: Reach the Transfiguration Classroom – and don’t forget your wand!")
+    typewriter("Collect magical tools, dodge Peeves, and unlock secret paths.")
+    typewriter("Type commands like: pickup [item], use [item], examine [item], drop [item], or inventory. \n "
+               "if you enter 'help', all commands will be displayed again")
     show_room_items()
 
 def game_loop():
@@ -193,16 +239,18 @@ def game_loop():
             break
         elif command == "inventory":
             show_inventory()
-        elif command == "look":
-            show_room_items()
         elif command.startswith("pickup "):
             pick_up(command[7:].strip())
+        elif command.startswith("drop "):
+            drop(command[5:].strip())
+        elif command.startswith("use "):
+            use(command[4:].strip())
         elif command.startswith("examine "):
             examine(command[8:].strip())
-        elif command.startswith("go to "):
-            advance_to_room(command[6:].strip().title())
+        elif command == "help":
+            typewriter("Commands: inventory, pickup [item], drop [item], use [item], examine [item], help")
         else:
-            typewriter("Unknown command. Try: pickup, examine, inventory, look, or quit.")
+            typewriter("Unknown command. Try: pickup, use, examine, inventory, drop, pickup or help.")
 
 if __name__ == "__main__":
     game_loop()
