@@ -1,82 +1,110 @@
-from sys import argv
 import csv
 import random
+from collections import defaultdict
+from sys import argv
 
-filename = "Technical Basics I_2025 - Sheet1.csv"
+# Define weeks (excluding week 6)
+weeks = [f"week{i}" for i in range(1, 14) if i != 6]
 students = []
-weeks = [f"week{i}" for week in range(1, 14) if i != 6]
-# Step 1
+
+# Read CSV file
 def read_csv(filename):
     global students
     try:
-        with open(filename, newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
+        with open(filename, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
             students = list(reader)
             print(f"✅ Loaded {len(students)} students from '{filename}'")
     except FileNotFoundError:
-        print ("File not found")
+        print("🚨 File not found! Please check the filename.")
         exit()
 
-# Step 2
+# Populate scores for weeks 1–13 (skip week 6)
 def populate_scores():
     for student in students:
         for week in weeks:
-            if week not in student:
-                student[week] = ""  # Add missing week columns
-            if week in weeks[5:]:
-                if student.get(week) in (None, "", " "):
-                    student[week] = str(random.randint(1, 3))
+            val = student.get(week, "").strip()
+            if val == "":
+                student[week] = str(random.randint(1, 3))
 
-# Step 3
+# Calculate Total and Average Points
 def calculate_all():
-   for
-    pass
-
-def calculate_total(score):
     for student in students:
         scores = []
         for week in weeks:
             try:
-                score = int(student.get(week, 0))
-                scores.append(score)
+                val = int(student.get(week, "").strip())
+                scores.append(val)
             except (ValueError, TypeError):
                 continue
 
-    top_scores = sorted(scores, reverse=True) [:10]
-    student["Total Points"] = str(sum(top_scores))
+        top_10 = sorted(scores, reverse=True)[:10]
+        total = sum(top_10)
+        avg = sum(scores) / len(scores) if scores else 0
 
+        student["Total Points"] = str(total)
+        student["Average Points"] = f"{avg:.2f}"
 
-def calculate_average(scores):
-    average =  0
-    return average
+# Write updated data to new CSV
+def write_csv(output_file):
+    fieldnames = list(students[0].keys())
+    with open(output_file, "w", newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(students)
 
-# After the update let's save the data as a new csv file
-
-def write_csv(filename):
-    pass
-
-# Bonus
-
+# Bonus: Print nicely formatted analysis
 def print_analysis():
-    # print average scores for stream A, B and every week
-    pass
+    stream_scores = defaultdict(list)
+    weekly_scores = defaultdict(list)
 
+    for student in students:
+        stream = student.get("Stream", "").strip().upper()
+        try:
+            avg = float(student["Average Points"])
+            if stream:
+                stream_scores[stream].append(avg)
+        except ValueError:
+            continue
+
+        for week in weeks:
+            try:
+                score = int(student.get(week, "").strip())
+                weekly_scores[week].append(score)
+            except (ValueError, TypeError):
+                continue
+
+    print("\n📊 Grade Summary")
+    print("=" * 35)
+
+    for stream in sorted(stream_scores):
+        scores = stream_scores[stream]
+        avg = sum(scores) / len(scores) if scores else 0
+        print(f"📘 Stream {stream} - Avg Points: {avg:.2f}")
+
+    print("\n📅 Weekly Averages:")
+    print("-" * 35)
+    for week in weeks:
+        scores = weekly_scores[week]
+        avg = sum(scores) / len(scores) if scores else 0
+        print(f"{week:<8}: {avg:.2f}")
+
+# Main execution
 if __name__ == "__main__":
-    script, filename = argv
+    if len(argv) < 2:
+        print("🚨 Please provide the input CSV file as an argument.")
+        exit()
 
-    print("Open file:", filename)
+    filename = argv[1]
+    print(f"📂 Opening file: {filename}")
 
     read_csv(filename)
-
     populate_scores()
     calculate_all()
 
-    user_name = "[your_name]"
-
-    newname = filename.split(".")[0] + "_calculated_by_" + user_name + ".csv"
-    write_csv(newname)
-    print("New file written:", newname)
+    user_name = "paula"
+    output_file = filename.replace(".csv", f"_calculated_by_{user_name}.csv")
+    write_csv(output_file)
+    print(f"\n✅ New file saved as: {output_file}")
 
     print_analysis()
-
-# Run the file with `python grade_calculator.py sheet.csv`
