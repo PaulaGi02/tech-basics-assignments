@@ -4,6 +4,7 @@ import random
 
 filename = "Technical Basics I_2025 - Sheet1.csv"
 students = []
+weeks = [f"week{i}" for week in range(1, 14) if i != 6]
 # Step 1
 def read_csv(filename):
     global students
@@ -16,19 +17,34 @@ def read_csv(filename):
         print ("File not found")
         exit()
 
-
 # Step 2
 def populate_scores():
-    pass
+    for student in students:
+        for week in weeks:
+            if week not in student:
+                student[week] = ""  # Add missing week columns
+            if week in weeks[5:]:
+                if student.get(week) in (None, "", " "):
+                    student[week] = str(random.randint(1, 3))
 
 # Step 3
 def calculate_all():
-    # loop through all the students and calculate grades
+   for
     pass
 
-def calculate_total(scores):
-    total = 0
-    return total
+def calculate_total(score):
+    for student in students:
+        scores = []
+        for week in weeks:
+            try:
+                score = int(student.get(week, 0))
+                scores.append(score)
+            except (ValueError, TypeError):
+                continue
+
+    top_scores = sorted(scores, reverse=True) [:10]
+    student["Total Points"] = str(sum(top_scores))
+
 
 def calculate_average(scores):
     average =  0
