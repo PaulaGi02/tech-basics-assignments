@@ -1,63 +1,93 @@
-# importing required library
 import pygame
 import random
 
-# constants
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
-BACKGROUND_COLOR = (255,255,255)
-
-# activate the pygame library
+# Initialize Pygame
 pygame.init()
 
-# create the display surface object
-# of specific dimension.
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-# set the pygame window name
+# Constants
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('The Scream Bouncing')
-
-# create a surface object, image is drawn on it.
-# use convert_alpha() for png images
-scream = pygame.image.load("scream.jpg").convert_alpha()
-scream = pygame.transform.scale(scream, (167,300))
-scream_rect = scream.get_rect()
-
-#set position
-scream_rect.x = SCREEN_WIDTH // 2
-scream_rect.y = SCREEN_HEIGHT // 2
-
-# option: tint your image if you want
-# imp.fill((0, 0, 200, 100), special_flags=pygame.BLEND_ADD)
-
-# position of dino
-scream_x = 100
-scream_y = 100
-
-# Init the clock
 clock = pygame.time.Clock()
+FPS = 60
 
-flag = True
-while flag:
-    # ticking the clock
-    clock.tick(60)
+class Screams:
+    def __init__(self):
+        self.images = [
+            pygame.transform.scale(pygame.image.load('scream1.jpg'), (167, 200)),
+            pygame.transform.scale(pygame.image.load('scream2.jpg'), (162, 164)),
+            pygame.transform.scale(pygame.image.load('scream3.jpg'), (175, 200)),
+            pygame.transform.scale(pygame.image.load('scream4.jpg'), (162, 162))
+        ]
+        self.image = random.choice(self.images)
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH - self.rect.width)
+        self.rect.y = random.randint(0, HEIGHT - self.rect.height)
+        self.speed_x = random.choice([-1, 1]) * random.randint(3, 6)
+        self.speed_y = random.choice([-1, 1]) * random.randint(3, 6)
+        self.bounce_count = 0  # New: Track bounces
+
+    def update(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+
+        if self.rect.left < 0:
+            self.rect.left = -self.rect.left
+            self.speed_x *= -1
+            self.change_image()
+
+        elif self.rect.right > WIDTH:
+            overflow = self.rect.right - WIDTH
+            self.rect.right = WIDTH - overflow
+            self.speed_x *= -1
+            self.change_image()
+
+        if self.rect.top < 0:
+            self.rect.top = -self.rect.top
+            self.speed_y *= -1
+            self.change_image()
+
+        elif self.rect.bottom > HEIGHT:
+            overflow = self.rect.bottom - HEIGHT
+            self.rect.bottom = HEIGHT - overflow
+            self.speed_y *= -1
+            self.change_image()
+
+    def change_image(self):
+        self.bounce_count += 1
+
+        self.image = random.choice(self.images)
+        if self.bounce_count % 3 == 0:
+            angle = random.choice([90, 180, 270])
+            self.image = pygame.transform.rotate(self.image, angle)
+
+        # Recalculate rect and maintain current position
+        old_center = self.rect.center
+        self.rect = self.image.get_rect(center=old_center)
+
+        # Change speed
+        self.speed_x = random.choice([-1, 1]) * random.randint(3, 6)
+        self.speed_y = random.choice([-1, 1]) * random.randint(3, 6)
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
+
+# Main game loop
+scream = Screams()
+running = True
+while running:
+    clock.tick(FPS)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            flag = False
+            running = False
 
-    # moving dino as clock tick
-    if scream_x  < SCREEN_WIDTH:
-        scream_x += 3
-    else:
-        scream_x = 0
+    scream.update()
 
-    # paint the screen with background color
-    screen.fill(BACKGROUND_COLOR)
-    # Using blit to copy image to screen at a specific location
-    screen.blit(scream, (scream_x, scream_y))
-    # refresh the display
+    screen.fill((255, 255, 255))
+    scream.draw(screen)
+
     pygame.display.flip()
 
 pygame.quit()
-exit(0)
