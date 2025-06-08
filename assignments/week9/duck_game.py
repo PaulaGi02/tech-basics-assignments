@@ -61,6 +61,65 @@ class Duckling(Entity):
 
     def reset_position(self, snake_body):
         self.pos = self._generate_random_pos(snake_body)
+
+class Duck(Entity):
+    def __init__(self):
+        super().__init__((6, 7))
+        self._body = [Vector2(6, 7), Vector2(5, 7), Vector2(4, 7)]
+        self._direction = Vector2(1, 0)
+        self._add_segment = False
+        self._score = 0
+
+    @property
+    def body(self) -> list:
+        return self._body
+
+    @body.setter
+    def body(self, body: list) -> None:
+        self._body = body
+
+    @property
+    def direction(self) -> Vector2:
+        return self._direction
+
+    @direction.setter
+    def direction(self, new_dir: Vector2) -> None:
+        if new_dir + self._direction != Vector2(0, 0):
+            self._direction = new_dir
+
+    @property
+    def score(self) -> int:
+        return self._score
+
+    @score.setter
+    def score(self, value: int) -> None:
+        self._score = value
+
+    def draw(self):
+        for i, segment in enumerate(self._body):
+            rect = (OFFSET + segment.x * CELL_SIZE, OFFSET + segment.y * CELL_SIZE,
+                    CELL_SIZE, CELL_SIZE)
+            if i == 0:
+                screen.blit(duck_img, rect)
+            else:
+                screen.blit(duck_img, rect)
+
+    def update(self):
+        self._body.insert(0, self._body[0] + self._direction)
+        if not self._add_segment:
+            self._body.pop()
+        else:
+            self._add_segment = False
+
+    def grow(self):
+        self._add_segment = True
+
+    def reset(self):
+        self._body = [Vector2(6, 7), Vector2(5, 7), Vector2(4, 7)]
+        self._direction = Vector2(1, 0)
+        self._add_segment = False
+        self._score = 0
+
 #Game class
 class Game:
     pass
