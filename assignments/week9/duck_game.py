@@ -121,8 +121,83 @@ class Duck(Entity):
         self._score = 0
 
 #Game class
+def draw_game_over():
+    overlay = pygame.Surface((SCREEN_SIZE, SCREEN_SIZE), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 128))
+    screen.blit(overlay, (0, 0))
+    go_txt1 = TITLE_FONT.render("Game Over!", True, WHITE)
+    go_txt2 = INSTR_FONT.render("Press SPACE or click START to play again.", True, WHITE)
+    screen.blit(go_txt1, (OFFSET+20, SCREEN_SIZE//2 - 80))
+    screen.blit(go_txt2, (OFFSET-10, SCREEN_SIZE//2 - 24))
+
 class Game:
-    pass
+    def __init__(self):
+        self.duck = Duck()
+        self.duckling = Duckling(self.duck.body)
+        self._state = "INSTRUCTION"
+        self._button_rect = pygame.Rect(
+            SCREEN_SIZE // 2 - 80, SCREEN_SIZE // 2 + 40, 160, 48)
+
+    def draw(self):
+        self.duck.draw()
+        self.duckling.draw()
+
+    def update(self):
+        if self._state == "RUNNING":
+            self.duck.update()
+            self._check_collisions()
+
+    def _check_collisions(self):
+        if self.duck.body[0] == self.duckling.pos:
+            self.duck.grow()
+            self.duck.score += 1
+            self.duckling.reset_position(self.duck.body)
+
+        if self.duck.body[0] in self.duck.body[1:]:
+            self._game_over()
+
+        x, y = self.duck.body[0]
+        if x < 0 or y < 0 or x >= NUM_CELLS or y >= NUM_CELLS:
+            self._game_over()
+
+    def _game_over(self):
+        self.duck.reset()
+        self.duckling.reset_position(self.duck.body)
+        self._state = "STOPPED"
+
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, v):
+        self._state = v
+
+    @property
+    def button_rect(self):
+        return self._button_rect
+
+    def draw_instruction_screen(self):
+        screen.fill(GREEN)
+        # Title
+        start_title_surface = TITLE_FONT.render("Duck Parade", True, DARK_GREEN)
+        screen.blit(start_title_surface, (OFFSET, OFFSET - 40))
+        # Instructions
+        instr_lines = [
+            "Help the duck parade collect as many other ducks as possible!",
+            "Use the arrow keys to move the duck.",
+            "Avoid crashing into the edges or yourself.",
+            "",
+            "Click the yellow button below or press SPACE to start!"
+        ]
+        for idx, line in enumerate(instr_lines):
+            instr_surf = INSTR_FONT.render(line, True, DARK_GREEN)
+            screen.blit(instr_surf, (OFFSET, OFFSET + 60 + idx * 36))
+        # Start Button
+        pygame.draw.rect(screen, BUTTON_COLOR, self._button_rect)
+        start_btn_txt = INSTR_FONT.render("START", True, DARK_GREEN)
+        start_txt_rect = start_btn_txt.get_rect(center=self._button_rect.center)
+        screen.blit(start_btn_txt, start_txt_rect)
 
 #Game loop
 game = Game()
@@ -134,12 +209,57 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+        if game.state == "INSTRUCTION":
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if game.button_rect.collidepoint(event.pos):
+                    game.state = "RUNNING"
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game.state = "RUNNING"
+
+        elif game.state == "RUNNING":
+            if event.type == SNAKE_UPDATE:
+                game.update()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    game.duck.direction = Vector2(0, -1)
+                if event.key == pygame.K_DOWN:
+                    game.duck.direction = Vector2(0, 1)
+                if event.key == pygame.K_LEFT:
+                    game.duck.direction = Vector2(-1, 0)
+                if event.key == pygame.K_RIGHT:
+                    game.duck.direction = Vector2(1, 0)
+
+        elif game.state == "STOPPED":
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if game.button_rect.collidepoint(event.pos):
+                    game.state = "RUNNING"
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game.state = "RUNNING"
+
     #Drawing
     screen.fill(GREEN)
     pygame.draw.rect(screen, DARK_GREEN,
-                        (OFFSET - 5, OFFSET - 5,
-                        CELL_SIZE * NUM_CELLS + 10,
-                        CELL_SIZE * NUM_CELLS + 10), 6)
+                     (OFFSET - 5, OFFSET - 5,
+                      CELL_SIZE * NUM_CELLS + 10,
+                      CELL_SIZE * NUM_CELLS + 10), 6)
+
+    if game.state == "INSTRUCTION":
+        game.draw_instruction_screen()
+    else:
+        game.draw()
+        # UI Text
+        title_surface = TITLE_FONT.render("Duck Parade", True, DARK_GREEN)
+        score_surface = SCORE_FONT.render(f"Score: {game.duck.score}", True, DARK_GREEN)
+        screen.blit(title_surface, (OFFSET - 5, 20))
+        screen.blit(score_surface, (OFFSET - 5, OFFSET + CELL_SIZE * NUM_CELLS + 14))
+        if game.state == "STOPPED":
+            draw_game_over()
+            # Draw start button on top
+            pygame.draw.rect(screen, BUTTON_COLOR, game.button_rect)
+            stopped_btn_txt = INSTR_FONT.render("START", True, DARK_GREEN)
+            stopped_txt_rect = stopped_btn_txt.get_rect(center = game.button_rect.center)
+            screen.blit(stopped_btn_txt, stopped_txt_rect)
 
     pygame.display.update()
     clock.tick(60)
