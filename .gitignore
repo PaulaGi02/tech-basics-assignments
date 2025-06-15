@@ -4,6 +4,7 @@ __pycache__/
 
 # Ignore virtual environments
 venv/
+__pycache__/
 env/
 
 # Ignore IDE files
