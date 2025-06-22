@@ -14,7 +14,8 @@ I chose this project because it’s built with Pygame and structured cleanly acr
 
 What does the program do? What's the general structure of the program?<br>
 - This is a card-matching memory game. Players click to flip cards and try to match colors. <br>
-- General Structure:
+
+General Structure:
   - game.py handles game logic (cards, flipping, matching, drawing).
   - display.py sets up the game screen.
   - main.py contains the main loop, handles menu interactions. <br>
@@ -44,8 +45,8 @@ line 31-41: clear - clears screen before drawing, if game runs updates the state
 line 43-65: class Menu - displays difficult level, easy, medium, hard, handles menu rendering, detects users clicked option<br>
 line 67-68: main==main - ensures main is only running if the file is executed
 
-Function analysis: pick one function and analyze it in detail: <br>
-game.py, ine 124-147:
+__Function analysis: pick one function and analyze it in detail:__ <br>
+game.py, line 124-147:
 - What does it do?
   - Updates the state of each card (animation). 
   - Handles logic for checking if two flipped cards match. 
@@ -80,7 +81,7 @@ I chose it because it demonstrates an interactive CLI tool with practical featur
 __What does the program do?__<br>
 A command-line flashcard study tool. It allows users to create, edit, and study flashcard decks. It selects cards based on spaced repetition and schedules future reviews.
 
-__General Structure__<br>
+__General Structure:__<br>
 flashcards_cli/<br>
 - \__init\__.py<br>
 - \__main\__.py         ← entry point<br>
@@ -111,7 +112,7 @@ Output:
 None directly. User interaction happens via terminal output and user input. State is updated in the DB through scheduler.
 
 __Takeaways:__<br>
-- Good CLI UX: The use of PyInquirer provides a friendly interface in the terminal, making it feel more interactive and less tedious.
+- Good CLI UX: The use of PyInquirer provides an interface in the terminal, making it feel more interactive and less tedious.
 - Error handling: Graceful fallback for user interruptions (e.g., Ctrl+C) and empty input. 
 - Scheduler logic: Delegating spaced repetition to a scheduler shows good separation of concerns.
 
