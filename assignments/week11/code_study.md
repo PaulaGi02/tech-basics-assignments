@@ -8,11 +8,16 @@ through various life stages like sprout, leaf, and bloom.
 As users invest more time, new minigames unlock, each reinforcing knowledge in 
 fun and varied ways. 
 
-
 <b>memory game:</b><br>
 https://github.com/JohnDev19/Memory-Match-Game/blob/main/game.py <br>
+I chose this project because it’s built with Pygame and structured cleanly across files. Also the memory-card-game fitted as a game for the final project
 
-*file structure -> display.py, game.py, main.py* <br>
+What does the program do? What's the general structure of the program?<br>
+- This is a card-matching memory game. Players click to flip cards and try to match colors. <br>
+- General Structure:
+  - game.py handles game logic (cards, flipping, matching, drawing).
+  - display.py sets up the game screen.
+  - main.py contains the main loop, handles menu interactions. <br>
 
 game.py: <br>
 line 1-7: importing libraries and initialising pygame/ mixer module <br>
@@ -39,52 +44,78 @@ line 31-41: clear - clears screen before drawing, if game runs updates the state
 line 43-65: class Menu - displays difficult level, easy, medium, hard, handles menu rendering, detects users clicked option<br>
 line 67-68: main==main - ensures main is only running if the file is executed
 
-Flashcards <br>
-https://github.com/ebisu-flashcards/flashcards-cli/tree/main/flashcards_cli
+Function analysis: pick one function and analyze it in detail: <br>
+game.py, ine 124-147:
+- What does it do?
+  - Updates the state of each card (animation). 
+  - Handles logic for checking if two flipped cards match. 
+  - Plays appropriate sounds and updates the score. 
+  - Ends the game when all cards are matched.
 
-file structure -> \_init.py\_, \_main.py\_, main.py, study.py <br>
-\_init.py\_ :  Imports the main() function from main.py for CLI interface exposure when the module is used  <br>
-\_main.py\_:  Also imports main() for CLI entrypoint if python -m flashcards_cli is used.
+- inputs/ outputs:
+  - Inputs: Internal game state (flipped cards, score, sound).
+  - Outputs: Updates to game logic (score, matched status, game over).
 
-<br> main.py <br>
+- How does it work?:<br>
+  - Loop through all cards to update their flip status.
+  - Check if two cards are flipped and finished animating:
+    - If they match, mark as matched and play a sound.
+    - If not, flip back and reduce score.
+  - Reset card selections.
+  - End the game if all cards are matched.
 
-1-9: Imports sys, click, sleep, PyInquirer, and functions from internal modules, initializer from core library, study(), edit() <br>
-12-46: def main() — main interactive CLI loop <br>
-17: Creates DB session using init_db()<br>
-18-20: Prints CLI welcome banner using click.echo<br>
-21-42: Infinite loop that:<br>
-    22-31: Prompts user to choose operation: ["Study", "Edit", "Quit"]<br>
-    32-33: If "Study", calls study(session)<br>
-    34-35: If "Edit", calls edit(session)<br>
-    36-38: If "Quit", prints exit message and returns<br>
-    39-42: Fallback exit for other/invalid input (with sleep)<br>
-    45: if \__name\__ == "\__main\__": main() - ensures program runs only when executed directly <br>
+Takeaways: <br>
+- Efficient handling of animations and game logic in one method. 
+- Clear separation of concerns between drawing, updating, and clicking. 
+- we can probably adapt our code to this example, just need to figure out, how we can add the flashcards on the memory cards
 
-study.py <br>
-
-1-7: Imports click, PyInquirer, and relevant DB/Scheduler/Errors modules<br>
-8: def study(session: Session)<br>
-12: Fetches all decks from the database<br>
-13-15: If no decks, informs user and returns early<br>
-17-27: Prompts user to select a deck <br>
-29-30: If user cancels or chooses "< Back>", exits study session<br>
-32: Gets the selected deck by name from DB<br>
-33: Initializes scheduler for that deck<br>
-35-42: Try to fetch first card using scheduler.next_card()<br>
-    - If no cards are due: display message and return<br>
-44-83: While loop that handles reviewing each flashcard:<br>
-    44: Shows card number<br>
-    48-58: Prompts user with question, waits for input<br>
-    60-64: If user enters nothing, exit with goodbye message<br>
-    67-72: Check if answer is correct or wrong, give feedback using click.echo<br>
-    75: Increments reviewed card count<br>
-    76-83: Try getting next card; exit loop if no more cards to study<br>
+What was confusing?:
+- At first I did not know what the .mixer was, but after my own research I understood that it was needed for sound effects
 
 
-*Quiz Game*<br>
-https://github.com/shriyaa01/Python_Quiz_Game/blob/main/quiz_game.py
+__Flashcards__ <br>
+https://github.com/ebisu-flashcards/flashcards-cli/tree/main/flashcards_cli <br>
+I chose it because it demonstrates an interactive CLI tool with practical features like spaced repetition, database integration, and dynamic user input.<br>
 
-1: importing random<br>
-3-99: quiz_data - dictionary with questions and answers<br>
-101-109: prints questions and options, gets user input and validates if input is right<br>
-111-122: loops through the questions, prints correct if answer is right and adds one point to the score or prints wrong + correct answer <br>
+__What does the program do?__<br>
+A command-line flashcard study tool. It allows users to create, edit, and study flashcard decks. It selects cards based on spaced repetition and schedules future reviews.
+
+__General Structure__<br>
+flashcards_cli/<br>
+- \__init\__.py<br>
+- \__main\__.py         ← entry point<br>
+-  main.py             ← main menu logic<br>
+- study.py            ← study logic<br>
+- edit/<br>
+    - \__init\__.py     ← launches edit menu<br>
+     - decks.py        ← create/edit/delete decks<br>
+     - cards.py        ← create/edit/delete cards<br>
+
+__How does it work?__<br>
+study.py, def study(session: Session):
+- Loads all decks. Uses Deck.get_all() to retrieve available decks.
+- Prompts user to select one or go back.
+- Uses get_scheduler_for_deck() to prepare the deck for studying.
+- scheduler.next_card() fetches the next card to review.
+- Main study loop:
+- Prompts the user with the card's question.
+- Gets their answer and compares it to the correct one.
+- Provides feedback ("Correct" or "Wrong").
+- Records the result via scheduler.process_test_result().
+- Repeat: Continues until no more cards are ready or user exits.
+
+__Input/Output:__<br>
+Input:
+session: a SQLAlchemy Session object used for database access.<br>
+Output:
+None directly. User interaction happens via terminal output and user input. State is updated in the DB through scheduler.
+
+__Takeaways:__<br>
+- Good CLI UX: The use of PyInquirer provides a friendly interface in the terminal, making it feel more interactive and less tedious.
+- Error handling: Graceful fallback for user interruptions (e.g., Ctrl+C) and empty input. 
+- Scheduler logic: Delegating spaced repetition to a scheduler shows good separation of concerns.
+
+__What parts of the code were confusing or difficult at the beginning to understand?__
+- the file structure was the most complicated, because there were several files and at first I was confused which files were and weren't important for the code to work.
+
+
