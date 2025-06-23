@@ -12,14 +12,15 @@ fun and varied ways.
 https://github.com/JohnDev19/Memory-Match-Game/blob/main/game.py <br>
 I chose this project because it’s built with Pygame and structured cleanly across files. Also the memory-card-game fitted as a game for the final project
 
-What does the program do? What's the general structure of the program?<br>
+__What does the program do? What's the general structure of the program?__<br>
 - This is a card-matching memory game. Players click to flip cards and try to match colors. <br>
 
-General Structure:
+__General Structure:__
   - game.py handles game logic (cards, flipping, matching, drawing).
   - display.py sets up the game screen.
   - main.py contains the main loop, handles menu interactions. <br>
 
+__general code analysis:__<br>
 game.py: <br>
 line 1-7: importing libraries and initialising pygame/ mixer module <br>
 line 9-20: class Card - defining starting point of the cards (color, format, revealed, matched) <br>
@@ -65,12 +66,12 @@ game.py, line 124-147:
   - Reset card selections.
   - End the game if all cards are matched.
 
-Takeaways: <br>
+__Takeaways:__ <br>
 - Efficient handling of animations and game logic in one method. 
 - Clear separation of concerns between drawing, updating, and clicking. 
 - we can probably adapt our code to this example, just need to figure out, how we can add the flashcards on the memory cards
 
-What was confusing?:
+__What was confusing?:__
 - At first I did not know what the .mixer was, but after my own research I understood that it was needed for sound effects
 
 
@@ -92,24 +93,27 @@ flashcards_cli/<br>
      - decks.py        ← create/edit/delete decks<br>
      - cards.py        ← create/edit/delete cards<br>
 
-__How does it work?__<br>
-study.py, def study(session: Session):
-- Loads all decks. Uses Deck.get_all() to retrieve available decks.
-- Prompts user to select one or go back.
-- Uses get_scheduler_for_deck() to prepare the deck for studying.
-- scheduler.next_card() fetches the next card to review.
-- Main study loop:
-- Prompts the user with the card's question.
-- Gets their answer and compares it to the correct one.
-- Provides feedback ("Correct" or "Wrong").
-- Records the result via scheduler.process_test_result().
-- Repeat: Continues until no more cards are ready or user exits.
+__Code analysis__<br>
+study.py, def study(session: Session):<br>
+- What does the code?<br>
+  - It implements the flashcard study mode. It lets users choose a deck, and then quizzes them on cards using a spaced repetition algorithm.<br>
+- How does the code work?<br>
+    - Loads all decks. Uses Deck.get_all() to retrieve available decks.
+    - Prompts user to select one or go back.
+    - Uses get_scheduler_for_deck() to prepare the deck for studying.
+    - scheduler.next_card() fetches the next card to review.
+    - Main study loop:
+    - Prompts the user with the card's question.
+    - Gets their answer and compares it to the correct one.
+    - Provides feedback ("Correct" or "Wrong").
+    - Records the result via scheduler.process_test_result().
+    - Repeat: Continues until no more cards are ready or user exits.
 
-__Input/Output:__<br>
-Input:
-session: a SQLAlchemy Session object used for database access.<br>
-Output:
-None directly. User interaction happens via terminal output and user input. State is updated in the DB through scheduler.
+- Input/Output:<br>
+  - Input:
+  - session: a SQLAlchemy Session object used for database access.<br>
+  - Output:
+  - None directly. User interaction happens via terminal output and user input. State is updated in the DB through scheduler.
 
 __Takeaways:__<br>
 - Good CLI UX: The use of PyInquirer provides an interface in the terminal, making it feel more interactive and less tedious.
@@ -117,6 +121,6 @@ __Takeaways:__<br>
 - Scheduler logic: Delegating spaced repetition to a scheduler shows good separation of concerns.
 
 __What parts of the code were confusing or difficult at the beginning to understand?__
-- the file structure was the most complicated, because there were several files and at first I was confused which files were and weren't important for the code to work.
+- the file structure was the most complicated, because there were several files and at first I was confused for what each folder/file were.
 
 
