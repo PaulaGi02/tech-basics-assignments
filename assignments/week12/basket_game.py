@@ -15,9 +15,10 @@ background = pygame.Surface((WIDTH, HEIGHT))
 background.fill((135, 206, 250))
 
 # Load and scale images
-basket_img = pygame.image.load("basket.png")
-good_object_img = pygame.image.load("apple.png")
-bad_object_img = pygame.image.load("bomb.png")
+basket_img = pygame.image.load("baskett.png").convert_alpha()
+good_object_img = pygame.image.load("apple.png").convert_alpha()
+bad_object_img = pygame.image.load("bomb.png").convert_alpha()
+basket_img = pygame.transform.scale(basket_img, (50, 50)).convert_alpha()
 
 basket_img = pygame.transform.scale(basket_img, (100, 50))
 good_object_img = pygame.transform.scale(good_object_img, (40, 40))
