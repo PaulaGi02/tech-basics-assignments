@@ -44,7 +44,7 @@ level = 1
 font = pygame.font.SysFont(None, 36)
 running = True
 
-# Falling object
+# Falling object, falling down
 class FallingObject:
     def __init__(self, x, y, is_good, speed_bonus=0):
         self.is_good = is_good
